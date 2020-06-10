@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0abf8591a7cf00c5fac6e10c147a0fbd",
+    "content-hash": "8ec7ceb0024f528b457ee70530bfee1b",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -560,6 +560,42 @@
                 }
             ],
             "time": "2020-03-17T15:00:55+00:00"
+        },
+        {
+            "name": "larapack/dd",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/larapack/dd.git",
+                "reference": "561b5111a13d0094b59b5c81b1572489485fb948"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/larapack/dd/zipball/561b5111a13d0094b59b5c81b1572489485fb948",
+                "reference": "561b5111a13d0094b59b5c81b1572489485fb948",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/var-dumper": "*"
+            },
+            "type": "package",
+            "autoload": {
+                "files": [
+                    "src/helper.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Topper",
+                    "email": "hi@webman.io"
+                }
+            ],
+            "description": "`dd` is a helper method in Laravel. This package will add the `dd` to your application.",
+            "time": "2016-12-15T09:34:34+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2804,7 +2840,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "tightenco/collect": 20,
-        "nesbot/carbon": 20
+        "nesbot/carbon": 20,
+        "larapack/dd": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

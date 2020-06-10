@@ -3,6 +3,7 @@
 namespace Platon;
 
 use Platon\Facades\Route;
+use Platon\ServiceProviders\ImageServiceProvider;
 use Platon\ServiceProviders\ModelServiceProvider;
 use Platon\ServiceProviders\RouteServiceProvider;
 use Platon\ServiceProviders\ServiceProvider;
@@ -21,6 +22,7 @@ class Application
     protected $serviceProviders = [
         RouteServiceProvider::class,
         ViewServiceProvider::class,
+        ImageServiceProvider::class,
         ModelServiceProvider::class
     ];
 

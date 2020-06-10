@@ -106,7 +106,21 @@ class Router
     {
         $content = $this->app->call($route->getClassName(), $route->getMethodName());
 
-        echo new Response($content);
+        try {
+            echo new Response($content);
+        } catch (\Exception $e) {
+            echo '<pre>';
+            echo $e;
+            exit;
+            return;
+            foreach ($e->getTrace()->__toString() as $line) {
+                dd($line->getMessage());
+                echo $line . PHP_EOL;
+            }
+
+            exit;
+        }
+
         return;
 
         if ($content instanceof Illuminate\View\View) {

@@ -139,8 +139,7 @@ class Response
                $content instanceof Jsonable ||
                $content instanceof ArrayObject ||
                $content instanceof JsonSerializable ||
-               is_array($content) ||
-               is_object($content);
+               is_array($content);
     }
 
     /**
@@ -192,7 +191,6 @@ class Response
     {
         $this->setStatusHeader();
 
-        header("HTTP/1.1 200 OK");
         foreach ($this->headers as $key => $value) {
             header($key, $value);
         }

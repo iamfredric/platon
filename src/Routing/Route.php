@@ -84,6 +84,10 @@ class Route
     {
         [$hook] = explode(':', $this->name);
 
+        if ($hook == 'front-page') {
+            $hook = 'frontpage';
+        }
+
         return "{$hook}_template";
     }
 

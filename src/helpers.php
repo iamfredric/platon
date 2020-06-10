@@ -63,3 +63,61 @@ if (! function_exists('app'))
         return $abstract ? $instance->make($abstract) : $instance;
     }
 }
+
+if (! function_exists('theme_url')) {
+    /**
+     * Basic helper for getting the theme url
+     *
+     * @param string $url optional
+     *
+     * @return string
+     */
+    function theme_url($url = '')
+    {
+        return (string) \Illuminate\Support\Str::of(get_bloginfo('stylesheet_directory'))
+                                               ->append("/$url")
+                                               ->rtrim('/');
+    }
+}
+
+if (! function_exists('assets')) {
+    /**
+     * @param $file
+     *
+     * @return string
+     */
+    function assets($file)
+    {
+        $file = ltrim($file, '/');
+
+        return (string) \Illuminate\Support\Str::of($file)
+                                               ->ltrim('/')
+                                               ->replace('//', '/')
+                                               ->prepend(theme_url(config('paths.assets')).'/');
+    }
+}
+
+if (! function_exists('mix')) {
+    /**
+     * @param $originalFilename
+     *
+     * @return string
+     */
+    function mix($originalFilename)
+    {
+        $filename = '/'.ltrim($originalFilename, '/');
+
+        $manifestFile = theme_path(config('paths.assets') . '/mix-manifest.json');
+
+        if (! file_exists($manifestFile)) {
+            return assets($originalFilename);
+        }
+
+        $manifest = json_decode(file_get_contents($manifestFile));
+
+
+        return isset($manifest->{$filename})
+            ? assets($manifest->{$filename})
+            : assets($originalFilename);
+    }
+}
