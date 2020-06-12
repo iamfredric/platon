@@ -4,6 +4,7 @@ namespace Platon;
 
 use Platon\Facades\Route;
 use Platon\ServiceProviders\ImageServiceProvider;
+use Platon\ServiceProviders\MenuServiceProvider;
 use Platon\ServiceProviders\ModelServiceProvider;
 use Platon\ServiceProviders\RouteServiceProvider;
 use Platon\ServiceProviders\ServiceProvider;
@@ -23,7 +24,8 @@ class Application
         RouteServiceProvider::class,
         ViewServiceProvider::class,
         ImageServiceProvider::class,
-        ModelServiceProvider::class
+        ModelServiceProvider::class,
+        MenuServiceProvider::class
     ];
 
     public function start()

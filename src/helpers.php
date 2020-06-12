@@ -121,3 +121,26 @@ if (! function_exists('mix')) {
             : assets($originalFilename);
     }
 }
+
+if (! function_exists('view'))
+{
+    /**
+     * @param null $name
+     *
+     * @return mixed|object|\Jenssegers\Blade\Blade
+     */
+    function view($name = null, $args = [])
+    {
+        $view = app('view');
+
+        if (! $name) {
+            return $view;
+        }
+
+        return $view->make($name, $args);
+
+        return $name
+            ? app(\Jenssegers\Blade\Blade::class)->make($name)
+            : app(\Jenssegers\Blade\Blade::class);
+    }
+}

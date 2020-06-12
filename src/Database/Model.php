@@ -30,6 +30,11 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     ];
 
     /**
+     * @var array
+     */
+    protected $casts = [];
+
+    /**
      * Keys that should remain hidden
      *
      * @var array
@@ -176,6 +181,8 @@ class Model implements Arrayable, Jsonable, ArrayAccess
         // it only casts to dates if defined
         $value = $this->castToDates($key, $value);
 
+        $value = $this->cast($key, $value);
+
         // If attribute getter is defined, the value gets filtered via this method
         if (method_exists($this, $method = $this->getAttributeMethodName($key))) {
             $value = $this->$method($value);
@@ -194,7 +201,8 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public function getExcerptAttribute($excerpt)
     {
-        $this->getAttribute('excerpt', content_to_excerpt($this->content, $this->excerptLength));
+        return (string) Str::of(strip_tags($excerpt ?: $this->content))
+                           ->limit($this->excerptLength);
     }
 
     /**
@@ -269,6 +277,21 @@ class Model implements Arrayable, Jsonable, ArrayAccess
         }
 
         return \Carbon\Carbon::parse($value);
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     *
+     * @return mixed
+     */
+    protected function cast($key, $value)
+    {
+        if (isset($this->casts[$key])) {
+            return new $this->casts[$key]($value);
+        }
+
+        return $value;
     }
 
     /**
