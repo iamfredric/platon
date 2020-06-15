@@ -2,7 +2,7 @@
 
 namespace Platon\Database;
 
-trait AdvancedCustomFIelds
+trait AdvancedCustomFields
 {
     /**
      * Advanced custom fields getter
