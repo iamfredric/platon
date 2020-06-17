@@ -2,6 +2,7 @@
 
 namespace Platon\Facades;
 
+use Platon\Application;
 use RuntimeException;
 
 abstract class Facade
@@ -25,12 +26,15 @@ abstract class Facade
      */
     public static function getFacadeRoot()
     {
-        return self::$resolvedInstance = static::$app->make(static::getFacadeAccessor());
-        if (! self::$resolvedInstance) {
-            self::$resolvedInstance = static::$app->make(static::getFacadeAccessor());
+        $name = static::getFacadeAccessor();
+
+        if (isset(static::$resolvedInstance[$name])) {
+            return static::$resolvedInstance[$name];
         }
 
-        return self::$resolvedInstance;
+        if (static::$app) {
+            return static::$resolvedInstance[$name] = static::$app->make($name);
+        }
     }
 
     /**

@@ -19,6 +19,11 @@ trait Transformer
     protected $casts = [];
 
     /**
+     * @var null | array
+     */
+    private $castables = null;
+
+    /**
      * @param array $data
      *
      * @return array
@@ -81,8 +86,12 @@ trait Transformer
      */
     protected function castItem($key, $item)
     {
-        if (! isset($this->casts[$key])) {
+        if (! $castable = $this->getCast($key)) {
             return $item;
+        }
+
+        if ($castable['type'] == 'array') {
+            return $this->castArray($castable, $item);
         }
 
         if (preg_match("/App\\\Models\\\(.*)/", $this->casts[$key])) {
@@ -94,6 +103,17 @@ trait Transformer
         }
 
         return new $this->casts[$key]($item);
+    }
+
+    protected function castArray($cast, $items)
+    {
+        return collect($items)->map(function ($item) use ($cast) {
+            foreach ($cast['castables'] as $key => $castable) {
+                $item[$key] = new $castable($item[$key]);
+            }
+
+            return $item;
+        })->toArray();
     }
 
     /**
@@ -121,5 +141,39 @@ trait Transformer
                 return new $this->map[$key]($item);
             })
             ->toArray();
+    }
+
+    protected function getCast($requestedKey)
+    {
+        if (! is_array($this->castables)) {
+            $this->castables = [];
+
+            if ( ! count($this->casts)) {
+                return null;
+            }
+
+            foreach ($this->casts as $key => $cast) {
+                if (strpos($key, '.*.') > -1) {
+                    [$key, $subkey] = explode('.*.', $key);
+                } else {
+                    $subkey = null;
+                }
+
+                if ( ! isset($this->castables[$key])) {
+                    $this->castables[$key] = [
+                        'type'      => $subkey ? 'array' : null,
+                        'castables' => []
+                    ];
+                }
+
+                if ($subkey) {
+                    $this->castables[$key]['castables'][$subkey] = $cast;
+                } else {
+                    $this->castables[$key]['castables'][] = $cast;
+                }
+            }
+        }
+
+        return $this->castables[$requestedKey] ?? null;
     }
 }

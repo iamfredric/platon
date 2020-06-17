@@ -35,7 +35,7 @@ if (! function_exists('theme_path')) {
 
 if (! function_exists('uploads_path')) {
     /**
-     * Basig helper for getting absoulte uploads path
+     * Basic helper for getting absoulte uploads path
      *
      * @param string $path
      *
@@ -138,9 +138,5 @@ if (! function_exists('view'))
         }
 
         return $view->make($name, $args);
-
-        return $name
-            ? app(\Jenssegers\Blade\Blade::class)->make($name)
-            : app(\Jenssegers\Blade\Blade::class);
     }
 }

@@ -2,9 +2,7 @@
 
 namespace Platon\Routing;
 
-use Illuminate\Contracts\Support\Jsonable;
 use Platon\Application;
-use Platon\Http\Response;
 
 class Router
 {
@@ -32,21 +30,14 @@ class Router
      * Router constructor.
      *
      * @param \Platon\Application $app
-     * @param $routesFile
      */
-    public function __construct(Application $app, $routesFile)
+    public function __construct(Application $app)
     {
         $this->app = $app;
-        $this->registerRoutes($routesFile);
     }
 
-    /**
-     * @param $routesFile
-     */
-    protected function registerRoutes($routesFile)
+    public function finalize()
     {
-        include_once $routesFile;
-
         add_filter('theme_page_templates', function($templates) {
             foreach ($this->templates as $key => $custom) {
                 $templates[$key] = $custom->getName();
@@ -70,7 +61,6 @@ class Router
             if ($this->routeIsDefined($template)) {
                 return $this->routeResponse($this->routes[$template]);
             }
-
 
             return $originalTemplate;
         });
@@ -104,43 +94,6 @@ class Router
 
     protected function routeResponse(Route $route)
     {
-        $content = $this->app->call($route->getClassName(), $route->getMethodName());
-
-        try {
-            echo new Response($content);
-        } catch (\Exception $e) {
-            echo '<pre>';
-            echo $e;
-            exit;
-            return;
-            foreach ($e->getTrace()->__toString() as $line) {
-                dd($line->getMessage());
-                echo $line . PHP_EOL;
-            }
-
-            exit;
-        }
-
-        return;
-
-        if ($content instanceof Illuminate\View\View) {
-            echo $content->render();
-            return;
-        }
-
-        if ($content instanceof Jsonable) {
-            header('Content-type: JSON');
-            echo $content->toJson();
-            return;
-        }
-
-        if (is_array($content) or is_object($content)) {
-            header('Content-type: JSON');
-
-            echo json_encode($content);
-            return;
-        }
-
-        echo $content;
+        echo $this->app->call($route->getClassName(), $route->getMethodName());
     }
 }

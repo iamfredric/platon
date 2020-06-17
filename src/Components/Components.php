@@ -76,7 +76,7 @@ class Components
         })->implode('');
 
         if (! $this->prefix) {
-            return (string) Str::of($name)->camel()->ucfirst()->prepend('\\App\\Components')->append('Component');
+            return (string) Str::of($name)->camel()->ucfirst()->prepend('\\App\\Components\\')->append('Component');
         }
 
         return (string) Str::of($name)->camel()->ucfirst()->prepend("\\App\\Components\\{$this->prefix}")->append('Component');

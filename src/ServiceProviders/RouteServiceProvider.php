@@ -10,7 +10,11 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(Application $app)
     {
         $app->singleton(Router::class, function () use ($app) {
-            return new Router($app, config('paths.routes'));
+            return new Router($app);
         }, true);
+
+        $app->autoload(config('paths.routes'));
+
+        $app->booted(Router::class, 'finalize');
     }
 }

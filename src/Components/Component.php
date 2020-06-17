@@ -45,7 +45,7 @@ class Component
     /**
      * Renders the component
      *
-     * @return \duncan3dc\Laravel\BladeInstance
+     * @return \Jenssegers\Blade\Blade
      */
     public function render()
     {

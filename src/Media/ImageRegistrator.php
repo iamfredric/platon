@@ -15,22 +15,15 @@ class ImageRegistrator
     protected $types = [];
 
     /**
-     * ImageRegistrator constructor.
-     *
-     * @param $configFilePath
-     */
-    public function __construct($configFilePath)
-    {
-        $this->getRoutes($configFilePath)
-             ->registerRoutes();
-    }
-
-    /**
      * @param mixed ...$types
+     *
+     * @return $this
      */
     public function support(...$types)
     {
         $this->types = $types;
+
+        return $this;
     }
 
     /**
@@ -63,31 +56,21 @@ class ImageRegistrator
     }
 
     /**
-     * @param $configFilePath
-     *
      * @return $this
      */
-    protected function getRoutes($configFilePath)
+    public function finalize()
     {
-        $image = $this;
+        if ($this->types) {
+            add_action('init', function () {
+                add_theme_support('post-thumbnails', $this->types);
+            });
+        }
 
-        include_once $configFilePath;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    protected function registerRoutes()
-    {
         if (! count($this->images)) {
             return $this;
         }
 
         add_action('init', function () {
-            add_theme_support('post-thumbnails', $this->types);
-
             foreach ($this->images as $image) {
                 $image->register();
             }

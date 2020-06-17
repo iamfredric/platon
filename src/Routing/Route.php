@@ -94,7 +94,6 @@ class Route
     public function getClassName()
     {
         if (! is_array($this->endpoint)) {
-            // Todo: check if namespaced
             if (strpos($this->endpoint, '@') > -1) {
                 [$classname] = explode('@', $this->endpoint);
 
@@ -106,8 +105,6 @@ class Route
 
                 return $classname;
             }
-
-            // Todo: Throw exception
         }
 
         return $this->endpoint[0];

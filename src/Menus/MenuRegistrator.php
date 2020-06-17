@@ -13,13 +13,10 @@ class MenuRegistrator
      * MenuRegistrator constructor.
      *
      * @param $themeId
-     * @param $routesFile
      */
-    public function __construct($themeId, $routesFile)
+    public function __construct($themeId)
     {
         $this->themeId = $themeId;
-
-        $this->registerRoutes($routesFile);
     }
 
     /**
@@ -46,13 +43,5 @@ class MenuRegistrator
             'container' => null,
             'items_wrap' => '%3$s'
         ], $args));
-    }
-
-    /**
-     * @param $routesFile
-     */
-    private function registerRoutes($routesFile)
-    {
-        include_once $routesFile;
     }
 }

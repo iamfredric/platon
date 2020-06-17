@@ -177,7 +177,6 @@ class Image
     {
         if (! $srcset = wp_get_attachment_image_srcset($this->id(), $size)) {
             return "#{$this->identifier()} {background-image: url(".$this->url($size).")}";
-            return 'background-image: url(' . $this->url($size) . ');';
         }
 
         $srcsets = explode(', ', $srcset);

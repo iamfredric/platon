@@ -3,6 +3,7 @@
 namespace Platon\Database;
 
 use Platon\Wordpress\Image;
+use Platon\Wordpress\WpImage;
 
 trait Thumbnail
 {
@@ -19,7 +20,7 @@ trait Thumbnail
     }
 
     /**
-     * @return \Platon\Database\WpImage|\Platon\Wordpress\Image
+     * @return \Platon\Wordpress\WpImage|\Platon\Wordpress\Image
      */
     protected function localizeThumbnail()
     {

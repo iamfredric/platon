@@ -92,6 +92,6 @@ class ImageSize
     public function register()
     {
         add_image_size($this->name, $this->width, $this->height, $this->crop);
-        add_image_size($this->name . '@2x', $this->width*2, $this->height*2, $this->crop);
+        add_image_size($this->name . '@2x', $this->width * 2, $this->height * 2, $this->crop);
     }
 }

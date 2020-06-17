@@ -13,7 +13,9 @@ class MenuServiceProvider extends ServiceProvider
     public function boot(Application $app)
     {
         $app->singleton('menu', function () {
-            return new MenuRegistrator(config('app.slug'), config('paths.menus'));
+            return new MenuRegistrator(config('app.slug'));
         }, true);
+
+        $app->autoload(config('paths.menus'));
     }
 }
