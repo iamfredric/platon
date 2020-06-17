@@ -29,7 +29,7 @@ if (! function_exists('config')) {
 if (! function_exists('theme_path')) {
     function theme_path($path = '')
     {
-        if (! function_exists('get_stylesheet_directory')) {
+        if (function_exists('get_stylesheet_directory')) {
             return rtrim(get_stylesheet_directory(), '/') . '/' . trim($path, '/');
         }
     }
