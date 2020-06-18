@@ -7,6 +7,11 @@ use Platon\Routing\Router;
 
 class RouteServiceProvider extends ServiceProvider
 {
+    /**
+     * @param \Platon\Application $app
+     *
+     * @return void
+     */
     public function boot(Application $app)
     {
         $app->singleton(Router::class, function () use ($app) {

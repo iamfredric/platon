@@ -27,9 +27,9 @@ class ImageRegistrator
     }
 
     /**
-     * @param $name
-     * @param null $width
-     * @param null $height
+     * @param string $name
+     * @param int $width
+     * @param int $height
      * @param bool $crop
      *
      * @return \Platon\Media\ImageSize
@@ -47,7 +47,7 @@ class ImageRegistrator
         }
 
         if ($crop) {
-            $image->crop($crop);
+            $image->crop();
         }
 
         $this->images[] = $image;
@@ -56,7 +56,7 @@ class ImageRegistrator
     }
 
     /**
-     * @return $this
+     * @return void
      */
     public function finalize()
     {
@@ -66,14 +66,12 @@ class ImageRegistrator
             });
         }
 
-        if (! count($this->images)) {
-            return $this;
+        if (count($this->images)) {
+            add_action('init', function () {
+                foreach ($this->images as $image) {
+                    $image->register();
+                }
+            });
         }
-
-        add_action('init', function () {
-            foreach ($this->images as $image) {
-                $image->register();
-            }
-        });
     }
 }

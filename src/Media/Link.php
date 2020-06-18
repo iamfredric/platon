@@ -38,10 +38,10 @@ class Link
     }
 
     /**
-     * @param $key
-     * @param null $default
+     * @param string $key
+     * @param mixed $default
      *
-     * @return mixed|null
+     * @return mixed
      */
     public function get($key, $default = null)
     {
@@ -49,7 +49,7 @@ class Link
     }
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */

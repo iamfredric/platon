@@ -64,7 +64,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public static function make(\WP_Post $post)
     {
-        $instance = new static;
+        $instance = new self();
 
         $instance->setAttributes($post);
 
@@ -84,25 +84,25 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     /**
      * Create a new instance with given post id
      *
-     * @param  integer $id
+     * @param int $id
      *
-     * @return Modest
+     * @return \Platon\Database\Model
      */
     public static function find($id)
     {
-        return QueryBuilder::find($id, new static);
+        return QueryBuilder::find($id, new self());
     }
 
     /**
      * Paginated results
      *
-     * @param  integer $limit
+     * @param int $limit
      *
-     * @return QueryBuilder
+     * @return \Platon\Database\Paginaton
      */
     public static function paginate($limit = null)
     {
-        return (new QueryBuilder(new static))->paginate($limit);
+        return (new QueryBuilder(new self()))->paginate($limit);
     }
 
     /**
@@ -110,7 +110,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public static function all()
     {
-        return QueryBuilder::all(new static);
+        return QueryBuilder::all(new self());
     }
 
     /**
@@ -118,11 +118,11 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      *
      * @param  array  $params
      *
-     * @return Modest
+     * @return \Platon\Database\Model
      */
     public static function create(array $params)
     {
-        $instance = new static;
+        $instance = new self();
 
         $params['post_type'] = $instance->getType();
 
@@ -134,9 +134,9 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     /**
      * Updates given post in database
      *
-     * @param  array  $args
+     * @param array $args
      *
-     * @return Modest
+     * @return \Platon\Database\Model
      */
     public function update(array $args)
     {
@@ -146,7 +146,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
             $params[$this->translateAttributeKeyToWordpress($key)] = $value;
         }
 
-        $params['ID'] = $this->id;
+        $params['ID'] = $this->attributes->get('id');
 
         return self::create($params);
     }
@@ -154,7 +154,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     /**
      * Saves current instances in database
      *
-     * @return Modest
+     * @return \Platon\Database\Model
      */
     public function save()
     {
@@ -164,9 +164,9 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     /**
      * Getter for attributes
      *
-     * @param $key
+     * @param string $key
      *
-     * @return mixed|null|static
+     * @return mixed
      */
     public function get($key)
     {
@@ -195,18 +195,18 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      * Excerpt attribute getter
      * The length is set by the excerptLength param
      *
-     * @param $excerpt
+     * @param string $excerpt
      *
      * @return string
      */
     public function getExcerptAttribute($excerpt)
     {
-        return (string) Str::of(strip_tags($excerpt ?: $this->content))
+        return (string) Str::of(strip_tags($excerpt ?: $this->get('content')))
                            ->limit($this->excerptLength);
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @param null $value
      *
      * @return mixed
@@ -223,19 +223,19 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     /**
      * Url attribute getter
      *
-     * @param  null $url
+     * @param string|null $url
      *
      * @return string
      */
     public function getUrlAttribute($url = null)
     {
-        $this->getAttribute('url', get_permalink($this->id));
+        return $this->getAttribute('url', get_permalink($this->get('id')));
     }
 
     /**
      * Translates key name to attribute getter name
      *
-     * @param $key
+     * @param string $key
      *
      * @return string
      */
@@ -247,9 +247,9 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     }
 
     /**
-     * Determines post type based on defined type or class name
-     *
      * @return string
+     *
+     * @throws \ReflectionException
      */
     public function getType()
     {
@@ -265,10 +265,10 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     /**
      * Casts defined key values to carbon instances
      *
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param string $value
      *
-     * @return Carbon
+     * @return Carbon|string
      */
     protected function castToDates($key, $value)
     {
@@ -276,12 +276,12 @@ class Model implements Arrayable, Jsonable, ArrayAccess
             return $value;
         }
 
-        return \Carbon\Carbon::parse($value);
+        return Carbon::parse($value);
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param mixed $value
      *
      * @return mixed
      */
@@ -297,7 +297,9 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     /**
      * Setter for attributes
      *
-     * @param $attributes
+     * @param mixed $attributes
+     *
+     * @return void
      */
     public function setAttributes($attributes)
     {
@@ -319,7 +321,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     /**
      * Checks if given attribute key should be hidden
      *
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */
@@ -335,7 +337,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     /**
      * Translates attribute keys from Wordpress to Modest
      *
-     * @param $key
+     * @param string $key
      *
      * @return string
      */
@@ -346,7 +348,8 @@ class Model implements Arrayable, Jsonable, ArrayAccess
 
     /**
      * Translates attribute keys from Modest to Wordpress
-     * @param $key
+     *
+     * @param string $key
      *
      * @return string
      */
@@ -461,8 +464,8 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     }
 
     /**
-     * @param $method
-     * @param $value
+     * @param string $method
+     * @param mixed $value
      *
      * @return mixed
      */
@@ -472,28 +475,28 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     }
 
     /**
-     * @param $method
+     * @param string $variable
      *
-     * @return \Illuminate\Support\Collection|mixed|null|Modest
+     * @return mixed
      */
-    public function __get($method)
+    public function __get($variable)
     {
-        if ($method == 'attributes') {
+        if ($variable == 'attributes') {
             return $this->attributes;
         }
 
-        return $this->get($method);
+        return $this->get($variable);
     }
 
     /**
-     * @param $method
-     * @param $args
+     * @param string $method
+     * @param mixed $args
      *
-     * @return \Wordpriest\Modest\QueryBuilder
+     * @return \Platon\Database\QueryBuilder
      */
     public static function __callStatic($method, $args)
     {
-        $instance = new static;
+        $instance = new self();
 
         return (new QueryBuilder($instance))->__call($method, $args);
     }

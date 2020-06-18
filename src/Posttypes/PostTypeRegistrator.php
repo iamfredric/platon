@@ -10,7 +10,7 @@ class PostTypeRegistrator
     protected $posttypes = [];
 
     /**
-     * @param $slug
+     * @param string $slug
      *
      * @return \Platon\Posttypes\Posttype
      */

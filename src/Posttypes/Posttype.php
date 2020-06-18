@@ -4,26 +4,60 @@ namespace Platon\Posttypes;
 
 class Posttype
 {
+
+    /**
+     * @var string
+     */
     protected $slug;
 
+    /**
+     * @var bool
+     */
     protected $public = true;
 
+    /**
+     * @var int
+     */
     protected $position = 25;
 
+    /**
+     * @var string
+     */
     protected $icon;
 
+    /**
+     * @var bool
+     */
     protected $exportable = true;
 
+    /**
+     * @var bool
+     */
     protected $deleteWithUser = false;
 
+    /**
+     * @var bool
+     */
     protected $hierarchical = false;
 
+    /**
+     * @var string
+     */
     protected $capabilityType = 'post';
 
+    /**
+     * @var bool
+     */
     protected $hasArchives = false;
 
+    /**
+     * @var bool
+     */
     protected $queryVar = false;
 
+    /**
+     * @var array
+     */
     protected $supports = [
         'title',
         'editor',
@@ -39,20 +73,30 @@ class Posttype
     ];
 
     /**
-     * @var false|string|string[]|null
+     * @var string
      */
     protected $singular;
 
     /**
-     * @var false|string|string[]|null
+     * @var string
      */
     protected $plural;
 
+    /**
+     * Posttype constructor.
+     *
+     * @param string $slug
+     */
     public function __construct($slug)
     {
         $this->slug = $slug;
     }
 
+    /**
+     * @param array<string> ...$supports
+     *
+     * @return $this
+     */
     public function supports(...$supports)
     {
         $this->supports = $supports;
@@ -60,6 +104,11 @@ class Posttype
         return $this;
     }
 
+    /**
+     * @param string $singular
+     *
+     * @return $this
+     */
     public function singular($singular)
     {
         $this->singular = mb_strtolower($singular, 'utf-8');
@@ -67,6 +116,11 @@ class Posttype
         return $this;
     }
 
+    /**
+     * @param string $plural
+     *
+     * @return $this
+     */
     public function plural($plural)
     {
         $this->plural = mb_strtolower($plural, 'utf-8');
@@ -74,6 +128,9 @@ class Posttype
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function isPrivate()
     {
         $this->public = false;
@@ -81,6 +138,11 @@ class Posttype
         return $this;
     }
 
+    /**
+     * @param int $positon
+     *
+     * @return $this
+     */
     public function position($positon)
     {
         $this->position = $positon;
@@ -88,6 +150,11 @@ class Posttype
         return $this;
     }
 
+    /**
+     * @param string $icon
+     *
+     * @return $this
+     */
     public function icon($icon)
     {
         $this->icon = $icon;
@@ -95,6 +162,9 @@ class Posttype
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function isExportable()
     {
         $this->exportable = true;
@@ -102,6 +172,9 @@ class Posttype
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function isNotExportable()
     {
         $this->exportable = false;
@@ -109,6 +182,9 @@ class Posttype
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function deleteWithUser()
     {
         $this->deleteWithUser = true;
@@ -116,6 +192,9 @@ class Posttype
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function hierarchical()
     {
         $this->hierarchical = true;
@@ -123,6 +202,11 @@ class Posttype
         return $this;
     }
 
+    /**
+     * @param string $capability
+     *
+     * @return $this
+     */
     public function capability($capability)
     {
         $this->capabilityType = $capability;
@@ -130,16 +214,25 @@ class Posttype
         return $this;
     }
 
+    /**
+     * @return string
+     */
     protected function getPlural()
     {
         return $this->plural ?? $this->singular ?? $this->slug;
     }
 
+    /**
+     * @return string
+     */
     protected function getSingular()
     {
         return $this->singular ?? $this->plural ?? $this->slug;
     }
 
+    /**
+     * @return void
+     */
     public function register()
     {
         register_post_type(

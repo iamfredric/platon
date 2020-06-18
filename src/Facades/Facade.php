@@ -8,7 +8,7 @@ use RuntimeException;
 abstract class Facade
 {
     /**
-     * @var \Platon\Application
+     * @var \Platon\Application|null
      */
     protected static $app;
 
@@ -20,9 +20,8 @@ abstract class Facade
     protected static $resolvedInstance;
 
     /**
-     * Get the root object behind the facade.
-     *
      * @return mixed
+     * @throws \ReflectionException
      */
     public static function getFacadeRoot()
     {
@@ -52,7 +51,7 @@ abstract class Facade
     /**
      * Set the application instance.
      *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @param  Application  $app
      * @return void
      */
     public static function setFacadeApplication($app)

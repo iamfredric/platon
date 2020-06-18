@@ -109,7 +109,7 @@ class Response
     }
 
     /**
-     * @param $content
+     * @param string $content
      *
      * @return void
      */
@@ -129,7 +129,7 @@ class Response
     }
 
     /**
-     * @param $content
+     * @param string $content
      *
      * @return bool
      */
@@ -143,7 +143,7 @@ class Response
     }
 
     /**
-     * @param $content
+     * @param string $content
      *
      * @return false|string
      */
@@ -159,13 +159,12 @@ class Response
     }
 
     /**
-     * @param $key
-     * @param $values
-     * @param bool $replace
+     * @param string $key
+     * @param string $values
      *
      * @return $this
      */
-    public function header($key, $values, $replace = true)
+    public function header($key, $values)
     {
         $this->headers[$key] = $values;
 

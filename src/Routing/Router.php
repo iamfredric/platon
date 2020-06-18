@@ -36,6 +36,9 @@ class Router
         $this->app = $app;
     }
 
+    /**
+     * @return void
+     */
     public function finalize()
     {
         add_filter('theme_page_templates', function($templates) {
@@ -67,9 +70,11 @@ class Router
     }
 
     /**
-     * @param $name
-     * @param $endpoint
+     * @param string $name
+     * @param array $endpoint
      * @param array $options
+     *
+     * @return void
      */
     public function register($name, $endpoint, $options = [])
     {
@@ -77,21 +82,35 @@ class Router
     }
 
     /**
-     * @param $key
-     * @param $name
-     * @param $endpoint
+     * @param string $key
+     * @param string $name
+     * @param array $endpoint
      * @param array $options
+     *
+     * @return void
      */
     public function template($key, $name, $endpoint, $options = [])
     {
         $this->templates[$key] = new Route($name, $endpoint, $options);
     }
 
+    /**
+     * @param string $route
+     *
+     * @return bool
+     */
     protected function routeIsDefined($route)
     {
         return isset($this->routes[$route]) || isset($this->templates[$route]);
     }
 
+    /**
+     * @param \Platon\Routing\Route $route
+     *
+     * @return mixed
+     *
+     * @throws \ReflectionException
+     */
     protected function routeResponse(Route $route)
     {
         echo $this->app->call($route->getClassName(), $route->getMethodName());

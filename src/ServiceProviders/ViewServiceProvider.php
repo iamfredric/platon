@@ -7,6 +7,11 @@ use Platon\Application;
 
 class ViewServiceProvider extends ServiceProvider
 {
+    /**
+     * @param \Platon\Application $app
+     *
+     * @return void
+     */
     public function boot(Application $app)
     {
         $app->singleton('view', function () {

@@ -17,7 +17,7 @@ class WpImage
     /**
      * WpImage constructor.
      *
-     * @param $postId
+     * @param int $postId
      */
     public function __construct($postId)
     {
@@ -45,18 +45,18 @@ class WpImage
     }
 
     /**
-     * @param  string $size optional
+     * @param string|null $size
      *
      * @return string
      */
     public function url($size = null)
     {
-        return get_the_post_thumbnail_url($this->id, $size);
+        return get_the_post_thumbnail_url($this->id(), $size);
     }
 
     /**
-     * @param  string $size
-     * @param  array  $attr optional
+     * @param string $size
+     * @param array $attr
      *
      * @return string
      */
@@ -65,6 +65,11 @@ class WpImage
         return get_the_post_thumbnail($this->postId, $size, $attr);
     }
 
+    /**
+     * @param string|null $size
+     *
+     * @return string|null
+     */
     public function style($size = null)
     {
         if (! $srcset = wp_get_attachment_image_srcset($this->id(), $size)) {

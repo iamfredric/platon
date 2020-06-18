@@ -58,7 +58,9 @@ class Application
     ];
 
     /**
-     * @param $path
+     * @param string $path
+     *
+     * @return void
      */
     public function autoload($path)
     {
@@ -66,8 +68,10 @@ class Application
     }
 
     /**
-     * @param $abstract
-     * @param null $method
+     * @param string $abstract
+     * @param mixed $method
+     *
+     * @return void
      */
     public function booted($abstract, $method = null)
     {
@@ -77,7 +81,9 @@ class Application
     /**
      * Sets the application instance
      *
-     * @param $instance
+     * @param \Platon\Application $instance
+     *
+     * @return void
      */
     public static function setInstance($instance)
     {
@@ -85,9 +91,11 @@ class Application
     }
 
     /**
-     * @param $abstract
-     * @param null $concrete
+     * @param string $abstract
+     * @param mixed $concrete
      * @param bool $resolve
+     *
+     * @return void
      */
     public function singleton($abstract, $concrete = null, $resolve = false)
     {
@@ -95,10 +103,12 @@ class Application
     }
 
     /**
-     * @param $abstract
-     * @param null $concrete
+     * @param string $abstract
+     * @param mixed $concrete
      * @param bool $shared
      * @param bool $resolve
+     *
+     * @return void
      */
     public function bind($abstract, $concrete = null, $shared = false, $resolve = false)
     {
@@ -110,10 +120,11 @@ class Application
     }
 
     /**
-     * @param $classname
-     * @param null $methodname
+     * @param string $classname
+     * @param null|string $methodname
      *
-     * @return mixed|object
+     * @return mixed
+     *
      * @throws \ReflectionException
      */
     public function call($classname, $methodname = null)
@@ -127,7 +138,7 @@ class Application
         $method = new ReflectionMethod($class, $methodname);
 
         if (! $method->isPublic()) {
-            die('Not a public callable method');
+            throw new \Exception("{$methodname} is not a callable method");
         }
 
         $dependencies = [];
@@ -142,9 +153,9 @@ class Application
     }
 
     /**
-     * @param $abstract
+     * @param string $abstract
      *
-     * @return mixed|object
+     * @return mixed
      * @throws \ReflectionException
      */
     public function make($abstract)
@@ -167,14 +178,14 @@ class Application
             if ($reflection->isInstantiable()) {
                 $dependencies = [];
                 if ($constructor = $reflection->getConstructor()) {
-                    die(var_dump($constructor->getParameters()));
+                    throw new \Exception('Unfinished');
                 }
 
 
                 return $reflection->newInstanceArgs($dependencies);
             }
 
-            dd('Todo...');
+            throw new \Exception('Unfinished');
         }
 
         $resolved = $this->bindings[$abstract]['concrete']();
@@ -193,8 +204,8 @@ class Application
      */
     public static function getInstance()
     {
-        if (! static::$instance) {
-            static::$instance = new static();
+        if (! static::$instance instanceof Application) {
+            static::$instance = new self();
         }
 
         return static::$instance;
@@ -203,7 +214,7 @@ class Application
     /**
      * Register serviceprovider
      *
-     * @param $provider
+     * @param string $provider
      *
      * @return mixed
      */
@@ -219,7 +230,7 @@ class Application
     }
 
     /**
-     * This is where the application starts
+     * @throws \ReflectionException
      *
      * @return void
      */
@@ -250,9 +261,8 @@ class Application
     }
 
     /**
-     * Resolves bindings that should autoresolve
-     *
      * @return $this
+     * @throws \ReflectionException
      */
     protected function resolveBindings()
     {
@@ -266,9 +276,8 @@ class Application
     }
 
     /**
-     * Resolves action hooks after booted
-     *
      * @return $this
+     * @throws \ReflectionException
      */
     protected function bootAfterBooted()
     {
@@ -307,6 +316,8 @@ class Application
      * Boots serviceprovider
      *
      * @param \Platon\ServiceProviders\ServiceProvider $provider
+     *
+     * @return void
      */
     protected function bootProvider(ServiceProvider $provider)
     {

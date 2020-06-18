@@ -81,13 +81,13 @@ class OptimisationsServiceProvider extends ServiceProvider
         // Prepare images for lazy loading
         add_filter('wp_get_attachment_image_attributes', function ($attributes) {
             return $attributes;
-            $attributes['data-src'] = $attributes['src'];
-            $attributes['data-srcset'] = $attributes['srcset'];
-            $attributes['src'] = '';
-            $attributes['srcset'] = '';
-            $attributes['class'] .= ' lazy';
-
-            return $attributes;
+//            $attributes['data-src'] = $attributes['src'];
+//            $attributes['data-srcset'] = $attributes['srcset'];
+//            $attributes['src'] = '';
+//            $attributes['srcset'] = '';
+//            $attributes['class'] .= ' lazy';
+//
+//            return $attributes;
         });
 
         // Move jquery to the footer

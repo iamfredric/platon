@@ -9,6 +9,8 @@ class MenuServiceProvider extends ServiceProvider
 {
     /**
      * @param \Platon\Application $app
+     *
+     * @return void
      */
     public function boot(Application $app)
     {

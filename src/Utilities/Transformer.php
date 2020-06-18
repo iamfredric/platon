@@ -62,8 +62,8 @@ trait Transformer
     /**
      * Transforms the item if defined
      *
-     * @param $key
-     * @param $item
+     * @param string $key
+     * @param mixed $item
      *
      * @return mixed
      */
@@ -79,10 +79,10 @@ trait Transformer
     }
 
     /**
-     * @param $key
-     * @param $item
+     * @param string $key
+     * @param mixed $item
      *
-     * @return object
+     * @return mixed
      */
     protected function castItem($key, $item)
     {
@@ -105,6 +105,12 @@ trait Transformer
         return new $this->casts[$key]($item);
     }
 
+    /**
+     * @param mixed $cast
+     * @param mixed $items
+     *
+     * @return array
+     */
     protected function castArray($cast, $items)
     {
         return collect($items)->map(function ($item) use ($cast) {
@@ -117,8 +123,8 @@ trait Transformer
     }
 
     /**
-     * @param $key
-     * @param $items
+     * @param string $key
+     * @param mixed $items
      *
      * @return array
      */
@@ -143,6 +149,11 @@ trait Transformer
             ->toArray();
     }
 
+    /**
+     * @param string $requestedKey
+     *
+     * @return mixed|null
+     */
     protected function getCast($requestedKey)
     {
         if (! is_array($this->castables)) {

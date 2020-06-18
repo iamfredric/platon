@@ -12,7 +12,7 @@ class Components
     protected $components = [];
 
     /**
-     * @var null
+     * @var string|null
      */
     protected $prefix;
 
@@ -20,11 +20,11 @@ class Components
      * Components constructor.
      *
      * @param array $components
-     * @param null $prefix
+     * @param string|null $prefix
      */
     public function __construct($components = [], $prefix = null)
     {
-        if ($prefix) {
+        if (! is_null($prefix)) {
             $this->prefix = ucfirst(strtolower($prefix));
         }
 
@@ -48,7 +48,9 @@ class Components
     }
 
     /**
-     * @param $components
+     * @param array $components
+     *
+     * @return void
      */
     protected function resolveComponents($components)
     {
@@ -65,7 +67,7 @@ class Components
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return string
      */
@@ -83,10 +85,10 @@ class Components
     }
 
     /**
-     * @param $component
-     * @param $classname
+     * @param array $component
+     * @param string $classname
      *
-     * @return \Incognito\Components\Component
+     * @return \Platon\Components\Component
      */
     protected function initializeComponent($component, $classname)
     {

@@ -12,23 +12,42 @@ class Route
     protected $name;
 
     /**
-     * @var null
+     * @var array
      */
     protected $endpoint;
 
-    public function __construct($name, $endpoint = null)
+    /**
+     * @var array
+     */
+    protected $optons;
+
+    /**
+     * Route constructor.
+     *
+     * @param string $name
+     * @param array $endpoint
+     * @param array $optons
+     */
+    public function __construct($name, $endpoint = null, $optons = [])
     {
         $this->name = $name;
         $this->endpoint = $endpoint;
 
         $this->register();
+        $this->optons = $optons;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @return void
+     */
     public function register()
     {
         add_filter($this->hook(), function ($template)
@@ -39,9 +58,16 @@ class Route
         });
     }
 
+    /**
+     * @param string $template
+     *
+     * @return string
+     */
     protected function extractName($template)
     {
         $queriedObject = get_queried_object();
+
+        $queryString = null;
 
         if ($queriedObject instanceof \WP_Post_Type) {
             $queryString = $queriedObject->name;
@@ -66,6 +92,9 @@ class Route
         return $template;
     }
 
+    /**
+     * @return string
+     */
     protected function getType()
     {
         $type = explode(':', $this->name);
@@ -75,11 +104,17 @@ class Route
         return implode(':', $type);
     }
 
+    /**
+     * @return bool
+     */
     protected function typeIsDefined()
     {
         return strpos($this->name, ':') > -1;
     }
 
+    /**
+     * @return string
+     */
     protected function hook()
     {
         [$hook] = explode(':', $this->name);
@@ -91,6 +126,9 @@ class Route
         return "{$hook}_template";
     }
 
+    /**
+     * @return mixed|string
+     */
     public function getClassName()
     {
         if (! is_array($this->endpoint)) {
@@ -110,6 +148,9 @@ class Route
         return $this->endpoint[0];
     }
 
+    /**
+     * @return string|null
+     */
     public function getMethodName()
     {
         if (! is_array($this->endpoint)) {
@@ -130,11 +171,20 @@ class Route
         return $this->endpoint[1] ?? null;
     }
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function getCallable()
     {
         return [$this->getClassName(),$this->getMethodName()];
     }
 
+    /**
+     * @return mixed
+     *
+     * @throws \Iamfredric\Instantiator\Exceptions\InstantiationException
+     */
     public function resolve()
     {
         $class = new Instantiator($this->getClassName());

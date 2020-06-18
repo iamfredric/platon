@@ -7,6 +7,11 @@ use Platon\Posttypes\PostTypeRegistrator;
 
 class PostTypeServiceProvider extends ServiceProvider
 {
+    /**
+     * @param \Platon\Application $app
+     *
+     * @return void
+     */
     public function boot(Application $app)
     {
         $app->singleton(PostTypeRegistrator::class, function () {

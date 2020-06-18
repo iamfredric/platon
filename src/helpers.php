@@ -1,6 +1,12 @@
 <?php
 
 if (! function_exists('config')) {
+    /**
+     * @param string $key
+     * @param null $default
+     *
+     * @return mixed|null
+     */
     function config($key, $default = null)
     {
         $keys = explode('.', $key);
@@ -27,11 +33,18 @@ if (! function_exists('config')) {
 }
 
 if (! function_exists('theme_path')) {
+    /**
+     * @param string $path
+     *
+     * @return string
+     */
     function theme_path($path = '')
     {
         if (function_exists('get_stylesheet_directory')) {
             return rtrim(get_stylesheet_directory(), '/') . '/' . trim($path, '/');
         }
+
+        return $path;
     }
 }
 
@@ -50,15 +63,18 @@ if (! function_exists('uploads_path')) {
 
             return rtrim($directory['basedir'], '/') . '/' . trim($path, '/');
         }
+
+        return $path;
     }
 }
 
 if (! function_exists('app'))
 {
     /**
-     * @param null $abstract
+     * @param string $abstract
      *
-     * @return \Platon\Application|mixed
+     * @return mixed|object|\Platon\Application
+     * @throws \ReflectionException
      */
     function app($abstract = null)
     {
@@ -86,7 +102,7 @@ if (! function_exists('theme_url')) {
 
 if (! function_exists('assets')) {
     /**
-     * @param $file
+     * @param string $file
      *
      * @return string
      */
@@ -103,7 +119,7 @@ if (! function_exists('assets')) {
 
 if (! function_exists('mix')) {
     /**
-     * @param $originalFilename
+     * @param string $originalFilename
      *
      * @return string
      */
@@ -129,9 +145,11 @@ if (! function_exists('mix')) {
 if (! function_exists('view'))
 {
     /**
-     * @param null $name
+     * @param string $name
+     * @param array $args
      *
-     * @return mixed|object|\Jenssegers\Blade\Blade
+     * @return mixed|object|\Platon\Application
+     * @throws \ReflectionException
      */
     function view($name = null, $args = [])
     {

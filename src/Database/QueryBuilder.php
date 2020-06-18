@@ -23,14 +23,14 @@ class QueryBuilder
     protected $metaArguments = [];
 
     /**
-     * @var null|Modest
+     * @var \Platon\Database\Model|null
      */
-    protected $model = null;
+    protected $model;
 
     /**
      * QueryBuilder constructor.
      *
-     * @param \Platon\Database\Model
+     * @param \Platon\Database\Model|null $model
      */
     public function __construct(Model $model = null)
     {
@@ -44,7 +44,7 @@ class QueryBuilder
     /**
      * Fetches the first record from database
      *
-     * @return \Platon\Database\Model
+     * @return \Platon\Database\Model|null
      */
     public function first()
     {
@@ -58,14 +58,14 @@ class QueryBuilder
     }
 
     /**
-     * @param $id
-     * @param null $model
+     * @param int $id
+     * @param \Platon\Database\Model|null $model
      *
      * @return mixed
      */
     public static function find($id, $model = null)
     {
-        $instance = new static($model);
+        $instance = new self($model);
 
         return $instance->buildItem(get_post($id));
     }
@@ -87,11 +87,9 @@ class QueryBuilder
     }
 
     /**
-     * Paginates results
+     * @param int|null $limit
      *
-     * @param  integere $limit
-     *
-     * @return Paginaton
+     * @return \Platon\Database\Paginaton
      */
     public function paginate($limit = null)
     {
@@ -105,9 +103,14 @@ class QueryBuilder
             $posts[] = $this->buildItem($post);
         }
 
-        return new Pagination($posts, $query);
+        return new Paginaton($posts, $query);
     }
 
+    /**
+     * @param int $limit
+     *
+     * @return $this
+     */
     public function limit($limit)
     {
         $this->setArgument('posts_per_page', $limit);
@@ -115,6 +118,11 @@ class QueryBuilder
         return $this;
     }
 
+    /**
+     * @param mixed $post
+     *
+     * @return mixed
+     */
     protected function buildItem($post)
     {
         if ($this->model) {
@@ -123,19 +131,19 @@ class QueryBuilder
             return $class::make($post);
         }
 
-        return Modest::make($post);
+        return Model::make($post);
     }
 
     /**
      * Fetches all items from database
      *
-     * @param null $model
+     * @param mixed $model
      *
      * @return mixed
      */
     public static function all($model = null)
     {
-        $instance = new static($model);
+        $instance = new self($model);
 
         $instance->setArgument('posts_per_page', -1);
 
@@ -161,8 +169,10 @@ class QueryBuilder
     /**
      * Setter for argument
      *
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param mixed $value
+     *
+     * @return void
      */
     public function setArgument($key, $value)
     {
@@ -172,8 +182,8 @@ class QueryBuilder
     /**
      * Query builder
      *
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param mixed $value
      *
      * @return $this
      */
@@ -187,7 +197,7 @@ class QueryBuilder
     /**
      * Metaquery builder
      *
-     * @param $args
+     * @param array $args
      *
      * @return $this
      */
@@ -209,8 +219,8 @@ class QueryBuilder
     /**
      * Resolves what magic method is called
      *
-     * @param $method
-     * @param $args
+     * @param string $method
+     * @param mixed $args
      *
      * @return QueryBuilder
      */
@@ -232,8 +242,8 @@ class QueryBuilder
     /**
      * Resolves arguments from magic method call
      *
-     * @param $method
-     * @param $arguments
+     * @param string $method
+     * @param mixed $arguments
      * @param array $args
      *
      * @return array
@@ -252,8 +262,8 @@ class QueryBuilder
     }
 
     /**
-     * @param $method
-     * @param $args
+     * @param string $method
+     * @param mixed $args
      *
      * @return QueryBuilder
      */
@@ -263,14 +273,14 @@ class QueryBuilder
     }
 
     /**
-     * @param $method
-     * @param $args
+     * @param string $method
+     * @param mixed $args
      *
-     * @return QueryBuilder|Collection|Modest
+     * @return QueryBuilder|Collection|\Platon\Database\Model
      */
     public static function __callStatic($method, $args)
     {
-        $instance = new static;
+        $instance = new self();
 
         return $instance->__call($method, $args);
     }

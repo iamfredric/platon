@@ -12,7 +12,7 @@ class MenuRegistrator
     /**
      * MenuRegistrator constructor.
      *
-     * @param $themeId
+     * @param string $themeId
      */
     public function __construct($themeId)
     {
@@ -20,8 +20,8 @@ class MenuRegistrator
     }
 
     /**
-     * @param $slug
-     * @param $label
+     * @param string $slug
+     * @param string $label
      *
      * @return void
      */
@@ -31,7 +31,7 @@ class MenuRegistrator
     }
 
     /**
-     * @param $slug
+     * @param string $slug
      * @param array $args
      *
      * @return mixed

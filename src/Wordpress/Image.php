@@ -35,7 +35,7 @@ class Image
     private $thumbnailDescription;
 
     /**
-     * @var string
+     * @var array
      */
     private $thumbnailSizes;
 
@@ -44,6 +44,9 @@ class Image
      */
     private $thumbnailCaption;
 
+    /**
+     * @var array
+     */
     private $thumbnailDimensions = [];
 
     /**
@@ -113,6 +116,8 @@ class Image
     }
 
     /**
+     * @param bool $nl2br
+     *
      * @return string
      */
     public function description($nl2br = false)
@@ -121,9 +126,9 @@ class Image
     }
 
     /**
-     * @param  string $size
+     * @param string $size
      *
-     * @return string
+     * @return mixed
      */
     public function getSizes($size)
     {
@@ -163,16 +168,27 @@ class Image
         return $this->thumbnailCaption;
     }
 
+    /**
+     * @return int
+     */
     public function width()
     {
         return $this->thumbnailDimensions['default']['width'];
     }
 
+    /**
+     * @return int
+     */
     public function height()
     {
         return $this->thumbnailDimensions['default']['height'];
     }
 
+    /**
+     * @param null|string $size
+     *
+     * @return string
+     */
     public function style($size = null)
     {
         if (! $srcset = wp_get_attachment_image_srcset($this->id(), $size)) {
@@ -205,12 +221,19 @@ class Image
 
     /**
      * @return boolean
+     *
+     * @return bool
      */
     public function exists()
     {
         return $this->hasimage;
     }
 
+    /**
+     * @param array $attr
+     *
+     * @return string|null
+     */
     private function makeAttr($attr = [])
     {
         $attributes = null;
@@ -226,6 +249,11 @@ class Image
         return $attributes;
     }
 
+    /**
+     * @param array $thumbnail
+     *
+     * @return void
+     */
     private function makeSizes($thumbnail)
     {
         $this->thumbnailDimensions['default'] = [
@@ -234,6 +262,9 @@ class Image
         ];
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->url();

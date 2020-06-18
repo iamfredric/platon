@@ -14,7 +14,7 @@ class Component
     protected $view = '';
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $prefix;
 
@@ -26,8 +26,8 @@ class Component
     /**
      * Component constructor.
      *
-     * @param $data
-     * @param null $prefix
+     * @param array $data
+     * @param string|null $prefix
      */
     public function __construct($data, $prefix = null)
     {
@@ -43,9 +43,9 @@ class Component
     }
 
     /**
-     * Renders the component
-     *
      * @return \Jenssegers\Blade\Blade
+     *
+     * @throws \ReflectionException
      */
     public function render()
     {

@@ -27,7 +27,7 @@ class ImageSize
     /**
      * ImageRegistrar constructor.
      *
-     * @param $name
+     * @param string $name
      */
     public function __construct($name)
     {
@@ -37,7 +37,7 @@ class ImageSize
     /**
      * Sets the width
      *
-     * @param $width
+     * @param int $width
      *
      * @return $this
      */
@@ -51,7 +51,7 @@ class ImageSize
     /**
      * Sets the height
      *
-     * @param $height
+     * @param int $height
      *
      * @return $this
      */
@@ -88,6 +88,8 @@ class ImageSize
 
     /**
      * Registers the image
+     *
+     * @return void
      */
     public function register()
     {
