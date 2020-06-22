@@ -8,6 +8,7 @@ use Platon\Facades\Image;
 use Platon\Facades\Route;
 use Platon\Media\ImageRegistrator;
 use Platon\ServiceProviders\AcfAdminServiceProvider;
+use Platon\ServiceProviders\HookServiceProvider;
 use Platon\ServiceProviders\ImageServiceProvider;
 use Platon\ServiceProviders\MenuServiceProvider;
 use Platon\ServiceProviders\ModelServiceProvider;
@@ -56,7 +57,8 @@ class Application
         MenuServiceProvider::class,
         OptimisationsServiceProvider::class,
         PostTypeServiceProvider::class,
-        AcfAdminServiceProvider::class
+        AcfAdminServiceProvider::class,
+        HookServiceProvider::class
     ];
 
     /**
