@@ -15,6 +15,16 @@ if (! function_exists('wp_upload_dir')) {
     {}
 }
 
+if (! function_exists('acf_add_options_page')) {
+    function acf_add_options_page(...$args)
+    {}
+}
+
+if (! function_exists('get_fields')) {
+    function get_fields(...$args)
+    {}
+}
+
 if (! function_exists('get_permalink')) {
     function get_permalink(...$args)
     {}
