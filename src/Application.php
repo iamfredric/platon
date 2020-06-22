@@ -173,7 +173,7 @@ class Application
                 $parent = $reflection->getParentClass()->getName();
 
                 if (isset($this->bindings[$parent])) {
-                    return $this->bindings[$parent]['concrete']($reflection->getName());
+                    return $this->bindings[$parent]['concrete']($abstract);
                 }
             }
 
