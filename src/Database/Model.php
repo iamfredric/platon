@@ -64,7 +64,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public static function make(\WP_Post $post)
     {
-        $instance = new self();
+        $instance = new static();
 
         $instance->setAttributes($post);
 
