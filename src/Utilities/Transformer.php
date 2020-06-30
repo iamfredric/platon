@@ -145,8 +145,7 @@ trait Transformer
                 }
 
                 return new $this->map[$key]($item);
-            })
-            ->toArray();
+            });
     }
 
     /**

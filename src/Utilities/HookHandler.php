@@ -43,12 +43,12 @@ class HookHandler
      */
     protected function resolve($callable, ...$args)
     {
-        if (is_callable($callable)) {
+        if (! is_array($callable) && is_callable($callable)) {
             return $callable($args);
         }
 
         [$callable, $method] = is_array($callable) ? $callable : [$callable, 'handle'];
 
-        return app()->make($callable)->$method($args);
+        return call_user_func_array([app()->make($callable), $method], ...$args);
     }
 }

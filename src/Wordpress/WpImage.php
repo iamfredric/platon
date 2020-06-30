@@ -39,6 +39,14 @@ class WpImage
     /**
      * @return string
      */
+    public function identifier()
+    {
+        return "thumbnail-{$this->thumbnailId}";
+    }
+
+    /**
+     * @return string
+     */
     public function title()
     {
         return get_the_title($this->id());

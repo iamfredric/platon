@@ -90,7 +90,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public static function find($id)
     {
-        return QueryBuilder::find($id, new self());
+        return QueryBuilder::find($id, new static());
     }
 
     /**
@@ -496,7 +496,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public static function __callStatic($method, $args)
     {
-        $instance = new self();
+        $instance = new static();
 
         return (new QueryBuilder($instance))->__call($method, $args);
     }

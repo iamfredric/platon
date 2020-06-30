@@ -162,3 +162,14 @@ if (! function_exists('view'))
         return $view->make($name, $args);
     }
 }
+
+if (! function_exists('trans'))
+{
+    /**
+     * @param string $string
+     */
+    function trans($string)
+    {
+        return __($string, config('app.theme-slug'));
+    }
+}

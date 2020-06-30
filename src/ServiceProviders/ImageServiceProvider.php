@@ -25,6 +25,10 @@ class ImageServiceProvider extends ServiceProvider
 
         $app->booted(function () {
             add_filter('sanitize_file_name', function ($filename) {
+                if (strpos($filename, '.') === false) {
+                    return $filename;
+                }
+
                 [$filename, $extension] = explode('.', $filename);
 
                 return (string) Str::of($filename)->slug()->append(".{$extension}");
