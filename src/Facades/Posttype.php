@@ -6,7 +6,7 @@ use Platon\Posttypes\PostTypeRegistrator;
 
 /**
  * @method static PostTypeRegistrator register($slug)
- * @return \Platon\Posttypes\Posttype
+ * @method static PostTypeRegistrator taxonomy($id)
  */
 class Posttype extends Facade
 {

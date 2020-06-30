@@ -83,6 +83,11 @@ class Posttype
     protected $plural;
 
     /**
+     * @var array
+     */
+    protected $taxonomies = [];
+
+    /**
      * Posttype constructor.
      *
      * @param string $slug
@@ -90,6 +95,18 @@ class Posttype
     public function __construct($slug)
     {
         $this->slug = $slug;
+    }
+
+    /**
+     * @param \Platon\Posttypes\Taxonomy $taxonomy
+     *
+     * @return $this
+     */
+    public function taxonomy(Taxonomy $taxonomy)
+    {
+        $this->taxonomies[] = $taxonomy;
+
+        return $this;
     }
 
     /**
@@ -271,5 +288,10 @@ class Posttype
                 ]
             ]
         );
+
+        foreach ($this->taxonomies as $taxonomy)
+        {
+            $taxonomy->register($this->slug);
+        }
     }
 }

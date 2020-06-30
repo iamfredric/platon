@@ -20,6 +20,16 @@ class PostTypeRegistrator
     }
 
     /**
+     * @param $id
+     *
+     * @return \Platon\Posttypes\Taxonomy
+     */
+    public function taxonomy($id)
+    {
+        return new Taxonomy($id);
+    }
+
+    /**
      * Registering those post types
      *
      * @return void
