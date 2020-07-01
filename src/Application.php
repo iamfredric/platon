@@ -2,11 +2,7 @@
 
 namespace Platon;
 
-use Illuminate\Support\Str;
 use Platon\Facades\Facade;
-use Platon\Facades\Image;
-use Platon\Facades\Route;
-use Platon\Media\ImageRegistrator;
 use Platon\ServiceProviders\AcfAdminServiceProvider;
 use Platon\ServiceProviders\HookServiceProvider;
 use Platon\ServiceProviders\ImageServiceProvider;
@@ -16,6 +12,7 @@ use Platon\ServiceProviders\OptimisationsServiceProvider;
 use Platon\ServiceProviders\PostTypeServiceProvider;
 use Platon\ServiceProviders\RouteServiceProvider;
 use Platon\ServiceProviders\ServiceProvider;
+use Platon\ServiceProviders\SupportServiceProvider;
 use Platon\ServiceProviders\ViewServiceProvider;
 use ReflectionMethod;
 
@@ -58,7 +55,8 @@ class Application
         OptimisationsServiceProvider::class,
         PostTypeServiceProvider::class,
         AcfAdminServiceProvider::class,
-        HookServiceProvider::class
+        HookServiceProvider::class,
+        SupportServiceProvider::class
     ];
 
     /**
