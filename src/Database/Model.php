@@ -110,7 +110,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public static function all()
     {
-        return QueryBuilder::all(new self());
+        return QueryBuilder::all(new static());
     }
 
     /**

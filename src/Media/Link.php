@@ -34,7 +34,11 @@ class Link
      */
     public function render($class = '')
     {
-        return '<a href="' . $this->get('url') . '" class="' . $class . '" target="' . $this->get('target') . '">' . $this->get('title') . '</a>';
+        if ($this->get('taget')) {
+            return '<a href="' . $this->get('url') . '" class="' . $class . '" target="' . $this->get('target') . '" rel="noopener">' . $this->get('title') . '</a>';
+        }
+
+        return '<a href="' . $this->get('url') . '" class="' . $class . '">' . $this->get('title') . '</a>';
     }
 
     /**
