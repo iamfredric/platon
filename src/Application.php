@@ -6,6 +6,7 @@ use Platon\Facades\Facade;
 use Platon\ServiceProviders\AcfAdminServiceProvider;
 use Platon\ServiceProviders\HookServiceProvider;
 use Platon\ServiceProviders\ImageServiceProvider;
+use Platon\ServiceProviders\LoginServiceProvider;
 use Platon\ServiceProviders\MenuServiceProvider;
 use Platon\ServiceProviders\ModelServiceProvider;
 use Platon\ServiceProviders\OptimisationsServiceProvider;
@@ -56,7 +57,8 @@ class Application
         PostTypeServiceProvider::class,
         AcfAdminServiceProvider::class,
         HookServiceProvider::class,
-        SupportServiceProvider::class
+        SupportServiceProvider::class,
+        LoginServiceProvider::class
     ];
 
     /**

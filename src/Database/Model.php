@@ -60,7 +60,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      *
      * @param  \WP_Post $post
      *
-     * @return self
+     * @return static
      */
     public static function make(\WP_Post $post)
     {
@@ -74,11 +74,11 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     /**
      * Create a new instance with current queried post
      *
-     * @return self
+     * @return static
      */
     public static function current()
     {
-        return self::make(get_post());
+        return static::make(get_post());
     }
 
     /**
@@ -102,7 +102,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public static function paginate($limit = null)
     {
-        return (new QueryBuilder(new self()))->paginate($limit);
+        return (new QueryBuilder(new static()))->paginate($limit);
     }
 
     /**
@@ -122,13 +122,13 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public static function create(array $params)
     {
-        $instance = new self();
+        $instance = new static();
 
         $params['post_type'] = $instance->getType();
 
         $id = wp_insert_post($params);
 
-        return self::find($id);
+        return static::find($id);
     }
 
     /**
@@ -148,7 +148,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
 
         $params['ID'] = $this->attributes->get('id');
 
-        return self::create($params);
+        return static::create($params);
     }
 
     /**
@@ -158,7 +158,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public function save()
     {
-        return self::create($this->toWordpressArray());
+        return static::create($this->toWordpressArray());
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Platon\ServiceProviders;
 
 use Platon\Application;
+use Platon\Facades\Hook;
 
 class AcfAdminServiceProvider extends ServiceProvider
 {
@@ -13,28 +14,38 @@ class AcfAdminServiceProvider extends ServiceProvider
      */
     public function boot(Application $app)
     {
-        if (! $config = config('app.admin.acf')) {
-            return;
-        }
+        $app->booted(function () use ($app) {
+            if (! function_exists('acf_add_options_page')) {
+                return;
+            }
 
-        if (! function_exists('acf_add_options_page')) {
-            return;
-        }
+            // Hiding acf in admin if not in debug mode
+            Hook::filter('acf/settings/show_admin', function () {
+                return WP_DEBUG;
+            });
 
-        $app->booted(function () use ($config, $app) {
-            foreach ($config as $key => $item) {
-                acf_add_options_page([
-                    'page_title' => __($item['title'], config('app.theme-slug')),
-                    'menu_slug' => config('app.theme-slug') . '-theme-' . $key,
-                    'capability' => $item['capability'] ?? 'edit_posts',
-                    'position' => $item['position'] ?? 99.627,
-                    'parent_slug' => $item['parent'] ?? null,
-                    'post_id' => $key,
-                    'autoload' => $item['autoload'] ?? false
-                ]);
+            // Loading options pages
+            if (! $options = config('acf.options')) {
+                return;
+            }
 
-                if (isset($item['share']) && $item['share'] === true) {
-                    $app->make('view')->share($key, collect(get_fields($key)));
+            // If multiple
+            if (is_array($options) && isset($options['menu_slug'])) {
+                acf_add_options_page($options);
+
+                if (isset($options['share']) && $options['share'] === true) {
+                    $app->make('view')->share($options['post_id'], collect(get_fields($options['post_id'])));
+                }
+
+                return;
+            }
+
+            // If single one
+            foreach ($options as $option) {
+                acf_add_options_page($option);
+
+                if (isset($option['share']) && $option['share'] === true) {
+                    $app->make('view')->share($option['post_id'], collect(get_fields($option['post_id'])));
                 }
             }
         });

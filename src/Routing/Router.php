@@ -3,6 +3,7 @@
 namespace Platon\Routing;
 
 use Platon\Application;
+use Platon\Http\Response;
 
 class Router
 {
@@ -113,6 +114,15 @@ class Router
      */
     protected function routeResponse(Route $route)
     {
-        echo $this->app->call($route->getClassName(), $route->getMethodName());
+        $response = $this->app->call($route->getClassName(), $route->getMethodName());
+
+        if ($response instanceof Response) {
+            echo $response;
+            exit;
+        }
+
+        echo new Response(
+            $response
+        );
     }
 }

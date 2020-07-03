@@ -65,7 +65,7 @@ class QueryBuilder
      */
     public static function find($id, $model = null)
     {
-        $instance = new self($model);
+        $instance = new static($model);
 
         return $instance->buildItem(get_post($id));
     }
@@ -143,7 +143,7 @@ class QueryBuilder
      */
     public static function all($model = null)
     {
-        $instance = new self($model);
+        $instance = new static($model);
 
         $instance->setArgument('posts_per_page', -1);
 
@@ -280,7 +280,7 @@ class QueryBuilder
      */
     public static function __callStatic($method, $args)
     {
-        $instance = new self();
+        $instance = new static();
 
         return $instance->__call($method, $args);
     }
