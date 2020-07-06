@@ -99,6 +99,10 @@ class Route
     {
         $type = explode(':', $this->name);
 
+        if (strpos($this->name, 'single-') > -1) {
+            return str_replace('single-', '', $this->name);
+        }
+
         array_shift($type);
 
         return implode(':', $type);
@@ -118,6 +122,10 @@ class Route
     protected function hook()
     {
         [$hook] = explode(':', $this->name);
+
+        if (strpos($this->name, 'single-') > -1) {
+            $hook = 'single';
+        }
 
         if ($hook == 'front-page') {
             $hook = 'frontpage';

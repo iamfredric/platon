@@ -97,7 +97,7 @@ class WpImage
             $imageTag = "background-image: url({$url});";
 
             if ($currentSize) {
-                $css[] = "@media only screen and (min-width: {$currentSize}) { {$imageTag} }";
+                $css[] = "@media only screen and (max-width: {$currentSize}) { {$imageTag} }";
             } else {
                 $css[] = $imageTag;
             }
