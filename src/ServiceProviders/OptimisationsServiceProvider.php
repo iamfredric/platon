@@ -75,7 +75,7 @@ class OptimisationsServiceProvider extends ServiceProvider
 
         // Prepare the content for lazy loading images
         add_filter('the_content', function ($content) {
-            return str_replace(['src', 'srcset'], ['data-src', 'data-srcset'], $content);
+            return str_replace([' src', ' srcset'], [' data-src', ' data-srcset'], $content);
         });
 
         // Prepare images for lazy loading
