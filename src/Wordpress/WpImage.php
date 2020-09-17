@@ -78,10 +78,10 @@ class WpImage
      *
      * @return string|null
      */
-    public function style($size = null)
+        public function style($size = null)
     {
         if (! $srcset = wp_get_attachment_image_srcset($this->id(), $size)) {
-            return null;
+            return "#{$this->identifier()} {background-image: url(".$this->url($size).")}";
         }
 
         $srcsets = explode(', ', $srcset);
@@ -94,7 +94,7 @@ class WpImage
 
             $url = esc_url($parts[0]);
 
-            $imageTag = "background-image: url({$url});";
+            $imageTag = "#{$this->identifier()} {background-image: url({$url})}";
 
             if ($currentSize) {
                 $css[] = "@media only screen and (max-width: {$currentSize}) { {$imageTag} }";
@@ -105,7 +105,7 @@ class WpImage
             $currentSize = str_replace('w', 'px', $parts[1]);
         }
 
-        return implode('', $css);
+        return '<style>' . implode('', $css) . '</style>';
     }
 
     /**

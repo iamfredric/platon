@@ -62,6 +62,14 @@ class Router
                 return $this->routeResponse($this->templates[$key]);
             }
 
+            if ($type = get_post_type()) {
+                $typeTemplate = "{$template}-{$type}";
+
+                if ($this->routeIsDefined($typeTemplate)) {
+                    return $this->routeResponse($this->routes[$typeTemplate]);
+                }
+            }
+
             if ($this->routeIsDefined($template)) {
                 return $this->routeResponse($this->routes[$template]);
             }

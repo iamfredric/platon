@@ -4,6 +4,10 @@ namespace Platon\Posttypes;
 
 class Posttype
 {
+    /**
+     * @var string
+     */
+    protected $id;
 
     /**
      * @var string
@@ -92,9 +96,9 @@ class Posttype
      *
      * @param string $slug
      */
-    public function __construct($slug)
+    public function __construct($id)
     {
-        $this->slug = $slug;
+        $this->id = $id;
     }
 
     /**
@@ -236,7 +240,7 @@ class Posttype
      */
     protected function getPlural()
     {
-        return $this->plural ?? $this->singular ?? $this->slug;
+        return $this->plural ?? $this->singular ?? $this->id;
     }
 
     /**
@@ -244,7 +248,39 @@ class Posttype
      */
     protected function getSingular()
     {
-        return $this->singular ?? $this->plural ?? $this->slug;
+        return $this->singular ?? $this->plural ?? $this->id;
+    }
+
+    /**
+     * @return $this
+     */
+    public function hasArchives()
+    {
+        $this->hasArchives = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function hasIndexPage()
+    {
+        $this->hasArchives = true;
+
+        return $this;
+    }
+
+    /**
+     * @param $slug
+     *
+     * @return $this
+     */
+    public function slug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 
     /**
@@ -253,7 +289,7 @@ class Posttype
     public function register()
     {
         register_post_type(
-            $this->slug, [
+            $this->id, [
                 'public' => $this->public,
                 'show_ui' => true,
                 'show_in_menu' => true,
@@ -267,6 +303,9 @@ class Posttype
                 'query_var' => $this->queryVar,
                 'capability_type' => $this->capabilityType,
                 'supports' => $this->supports,
+                'rewrite' => [
+                    'slug' => $this->slug ?? $this->id
+                ],
 
                 'labels' => [
                     'name' => __(ucfirst($this->getPlural()), config('app.slug')),
@@ -291,7 +330,7 @@ class Posttype
 
         foreach ($this->taxonomies as $taxonomy)
         {
-            $taxonomy->register($this->slug);
+            $taxonomy->register($this->id);
         }
     }
 }

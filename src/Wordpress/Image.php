@@ -206,14 +206,13 @@ class Image
             $url = esc_url($parts[0]);
 
             $imageTag = "#{$this->identifier()} {background-image: url({$url})}";
+            $currentSize = str_replace('w', 'px', $parts[1]);
 
             if ($currentSize) {
                 $css[] = "@media only screen and (max-width: {$currentSize}) { {$imageTag} }";
             } else {
                 $css[] = $imageTag;
             }
-
-            $currentSize = str_replace('w', 'px', $parts[1]);
         }
 
         return '<style>' . implode('', $css) . '</style>';

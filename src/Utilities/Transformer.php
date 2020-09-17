@@ -134,6 +134,10 @@ trait Transformer
             return $items;
         }
 
+        if (! $items) {
+            return $items;
+        }
+
         return collect($items)
             ->map(function ($item) use ($key) {
                 if (preg_match("/App\\\Models\\\(.*)/", $this->map[$key])) {

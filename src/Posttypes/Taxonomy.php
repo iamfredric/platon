@@ -254,7 +254,9 @@ class Taxonomy
             'hierarchical'  => $this->hierarchical,
             'show_ui'       => $this->showUi,
             'show_tagcloud' => $this->showTagCloud,
-            'slug'          => $this->slug ?: $this->id
+            'rewrite' => [
+                'slug' => $this->slug ?: $this->id
+            ]
         ]);
     }
 }
