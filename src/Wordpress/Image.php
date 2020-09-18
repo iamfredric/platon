@@ -189,34 +189,25 @@ class Image
      *
      * @return string
      */
-    public function style($size = null)
-    {
+    public function style($size = null) {
         if (! $srcset = wp_get_attachment_image_srcset($this->id(), $size)) {
-            return "#{$this->identifier()} {background-image: url(".$this->url($size).")}";
+            return "<style>#{$this->identifier()} {background-image: url(".$this->url($size).")}</style>";
         }
 
-        $srcsets = explode(', ', $srcset);
-        $currentSize = '';
+        $css = collect(explode(', ', $srcset))->map(function ($item) {
+            [$url, $width] = explode(' ', $item);
 
-        $css = [];
+            return (object) [
+                'url' => $url,
+                'width' => (int) str_replace("w", "", $width)
+            ];
+        })->sortByDesc('width')->map(function ($item) {
+            return "@media only screen and (max-width: {$item->width}px) { #{$this->identifier()} {background-image: url({$item->url})} }";
+        })->implode('');
 
-        foreach ($srcsets as $set) {
-            $parts = explode(' ', $set);
-
-            $url = esc_url($parts[0]);
-
-            $imageTag = "#{$this->identifier()} {background-image: url({$url})}";
-            $currentSize = str_replace('w', 'px', $parts[1]);
-
-            if ($currentSize) {
-                $css[] = "@media only screen and (max-width: {$currentSize}) { {$imageTag} }";
-            } else {
-                $css[] = $imageTag;
-            }
-        }
-
-        return '<style>' . implode('', $css) . '</style>';
+        return "<style>#{$this->identifier()} {background-image: url(".$this->url($size).")}{$css}</style>";
     }
+
 
     /**
      * @return boolean
