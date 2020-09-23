@@ -52,9 +52,7 @@ class Route
     {
         add_filter($this->hook(), function ($template)
         {
-            return $this->typeIsDefined()
-                ? $this->extractName($template)
-                : $this->name;
+            return $this->extractName($template);
         });
     }
 
