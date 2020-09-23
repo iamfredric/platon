@@ -93,7 +93,27 @@ class ImageSize
      */
     public function register()
     {
+        $this->extractSizeFromName();
+
         add_image_size($this->name, $this->width, $this->height, $this->crop);
         add_image_size($this->name . '@2x', $this->width * 2, $this->height * 2, $this->crop);
+    }
+
+    /**
+     * @return void
+     */
+    protected function extractSizeFromName()
+    {
+        if (!! $this->width || !! $this->height) {
+            return;
+        }
+
+        if (preg_match("/^([0-9]+)x([0-9]+)$/", $this->name)) {
+            [$width, $height] = explode('x', $this->name);
+
+            $this->width($width)
+                 ->height($height)
+                 ->crop();
+        }
     }
 }
