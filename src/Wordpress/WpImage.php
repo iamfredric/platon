@@ -78,34 +78,40 @@ class WpImage
      *
      * @return string|null
      */
-        public function style($size = null)
+    public function style($size = null)
     {
         if (! $srcset = wp_get_attachment_image_srcset($this->id(), $size)) {
-            return "#{$this->identifier()} {background-image: url(".$this->url($size).")}";
+            return "<style>#{$this->identifier()} {background-image: url(".$this->url($size).")}</style>";
         }
 
-        $srcsets = explode(', ', $srcset);
-        $currentSize = '';
+        $css = collect(explode(', ', $srcset))->map(function ($item) {
+            [$url, $width] = explode(' ', $item);
 
-        $css = [];
+            return (object) [
+                'url' => $url,
+                'width' => (int) str_replace("w", "", $width)
+            ];
+        })->sortByDesc('width')->map(function ($item) {
+            return "@media only screen and (max-width: {$item->width}px) { #{$this->identifier()} {background-image: url({$item->url})} }";
+        })->implode('');
 
-        foreach ($srcsets as $set) {
-            $parts = explode(' ', $set);
+        return "<style>#{$this->identifier()} {background-image: url(".$this->url($size).")}{$css}</style>";
+    }
 
-            $url = esc_url($parts[0]);
+    /**
+     * @param string|null $size
+     *
+     * @return string
+     */
+    public function styles($size = null)
+    {
+        if ($style = $this->style($size)) {
+            add_action('wp_footer', function () use($style) {
+                echo $style;
+            });
 
-            $imageTag = "#{$this->identifier()} {background-image: url({$url})}";
-
-            if ($currentSize) {
-                $css[] = "@media only screen and (max-width: {$currentSize}) { {$imageTag} }";
-            } else {
-                $css[] = $imageTag;
-            }
-
-            $currentSize = str_replace('w', 'px', $parts[1]);
+            return "id={$this->identifier()}";
         }
-
-        return '<style>' . implode('', $css) . '</style>';
     }
 
     /**

@@ -208,6 +208,21 @@ class Image
         return "<style>#{$this->identifier()} {background-image: url(".$this->url($size).")}{$css}</style>";
     }
 
+    /**
+     * @param string|null $size
+     *
+     * @return string
+     */
+    public function styles($size = null)
+    {
+        if ($style = $this->style($size)) {
+            add_action('wp_footer', function () use($style) {
+                echo $style;
+            });
+
+            return "id={$this->identifier()}";
+        }
+    }
 
     /**
      * @return boolean
