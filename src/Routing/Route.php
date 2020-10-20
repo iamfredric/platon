@@ -87,7 +87,7 @@ class Route
             return $this->name;
         }
 
-        return $template;
+        return $template ?: str_replace('_template', '', $this->hook());
     }
 
     /**

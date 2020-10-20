@@ -59,7 +59,7 @@ class WpImage
      */
     public function url($size = null)
     {
-        return get_the_post_thumbnail_url($this->id(), $size);
+        return wp_get_attachment_image_url($this->id(), $size);
     }
 
     /**
