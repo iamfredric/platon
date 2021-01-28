@@ -194,6 +194,14 @@ class QueryBuilder
         return $this;
     }
 
+    protected function buildOrderBy($value, $direction = 'ASC')
+    {
+        $this->setArgument('orderby', $value);
+        $this->setArgument('order', strtolower($direction) === 'ASC' ? 'ASC' : 'DESC');
+
+        return $this;
+    }
+
     /**
      * Metaquery builder
      *
@@ -234,6 +242,18 @@ class QueryBuilder
 
         if ($key == 'limit') {
             return $this->limit($args[0]);
+        }
+
+        if ($key === 'orderBy') {
+            return $this->buildOrderBy($args[0], $args[1] ?? 'ASC');
+        }
+
+        if ($key === 'latest') {
+            return $this->buildOrderBy($args[0] ?? 'published_at', 'DESC');
+        }
+
+        if ($key === 'oldest') {
+            return $this->buildOrderBy($args[0] ?? 'published_at', 'ASC');
         }
 
         return $this->buildWhere($key, $value);

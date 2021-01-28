@@ -203,4 +203,24 @@ class Route
 
         return $class->call()();
     }
+
+    /**
+     * @return bool
+     */
+    public function isCallable()
+    {
+        if (is_array($this->endpoint)) {
+            return false;
+        }
+
+        return is_callable($this->endpoint);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function call()
+    {
+        return call_user_func($this->endpoint);
+    }
 }

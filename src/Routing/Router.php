@@ -122,7 +122,9 @@ class Router
      */
     protected function routeResponse(Route $route)
     {
-        $response = $this->app->call($route->getClassName(), $route->getMethodName());
+        $response = $route->isCallable()
+            ? $route->call()
+            : $this->app->call($route->getClassName(), $route->getMethodName());
 
         if ($response instanceof Response) {
             echo $response;
