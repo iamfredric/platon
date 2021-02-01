@@ -49,10 +49,12 @@ class Component
      */
     public function render()
     {
-        if ($this->prefix) {
-            return view("components.{$this->prefix}.{$this->view}", $this->data);
+        if ($path = config('paths.components')) {
+            $view = str_replace('{name}', $this->prefix ? "{$this->prefix}.{$this->view}" : $this->view, $path);
+        } else {
+            $view = $this->prefix ? "components.{$this->prefix}.{$this->view}" : "components.{$this->view}";
         }
 
-        return view("components.{$this->view}", $this->data);
+        return view($view, $this->data);
     }
 }
