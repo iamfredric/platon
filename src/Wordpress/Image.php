@@ -107,6 +107,24 @@ class Image
         return $this->getSizes($size);
     }
 
+    public function getWidth($size = null)
+    {
+        if (! $size) {
+            return $this->width();
+        }
+
+        return $this->thumbnailSizes["{$size}-width"] ?? null;
+    }
+
+    public function getHeight($size = null)
+    {
+        if (! $size) {
+            return $this->height();
+        }
+
+        return $this->thumbnailSizes["{$size}-height"] ?? null;
+    }
+
     /**
      * @return string
      */
@@ -154,6 +172,9 @@ class Image
         }
 
         $srcset = wp_get_attachment_image_srcset($this->id(), $size);
+
+        $attr['width'] = $this->getWidth($size);
+        $attr['height'] = $this->getHeight($size);
 
         return $lazy
             ? '<img data-src="' . $this->url($size) . '" alt="' . $this->alt() . '" title="' . $this->title() . '"' . $this->makeAttr($attr) . ' data-srcset="'. $srcset .'" sizes="100vw">'
