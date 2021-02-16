@@ -62,7 +62,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      *
      * @return static
      */
-    public static function make(\WP_Post $post)
+    public static function make($post)
     {
         $instance = new static();
 

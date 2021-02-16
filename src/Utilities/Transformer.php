@@ -33,31 +33,47 @@ trait Transformer
         $items = [];
 
         foreach ($data as $key => $item) {
-            // Auto cast images to Image object
-            if (is_array($item) and isset($item['sizes'])) {
-                $item = new Image($item);
-            }
-
-            if (is_array($item) && isset($item['url']) && isset($item['title']) && isset($item['target'])) {
-                $item = new Link($item);
-            }
-
             $key = Str::camel($key);
 
-            // Casts item if defined
-            $item = $this->castItem($key, $item);
-
-            // Maps item if it is defined
-            $item = $this->mapItem($key, $item);
-
-            // Transform attribute if defined
-            $item = $this->transformItem($key, $item);
+            // Auto cast images to Image object
+            $item = $this->massage($item, $key);
 
             $items[$key] = $item;
+
+            // Appendix
+            if (isset($this->append[$key])) {
+                $appendKey = Str::camel($this->append[$key]);
+                $methodName = "append". ucfirst($appendKey) . 'Attribute';
+                $value = method_exists($this, $methodName) ? $this->$methodName($item) : null;
+                $items[$appendKey] = $this->massage($value, $appendKey);
+            }
         }
 
         return $items;
     }
+
+        protected function massage($item, $key)
+    {
+        if (is_array($item) and isset($item['sizes'])) {
+            $item = new Image($item);
+        }
+
+        if (is_array($item) && isset($item['url']) && isset($item['title']) && isset($item['target'])) {
+            $item = new Link($item);
+        }
+
+        // Casts item if defined
+        $item = $this->castItem($key, $item);
+
+        // Maps item if it is defined
+        $item = $this->mapItem($key, $item);
+
+        // Transform attribute if defined
+        $item = $this->transformItem($key, $item);
+
+        return $item;
+    }
+
 
     /**
      * Transforms the item if defined
