@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "php": "^7.2",
+    "php": "^7.2|^8.0",
     "iamfredric/instantiator": "1.0.0",
     "jenssegers/blade": "^1.4",
     "illuminate/collections": "^8.23",

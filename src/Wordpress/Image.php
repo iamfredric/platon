@@ -157,28 +157,18 @@ class Image
      * @param string $size
      * @param array $attr optional
      *
-     * @param bool $lazy
+     * @param bool $lazy deprecated
      *
      * @return string
      */
-    public function render($size = null, $attr = [], $lazy = true)
+    public function render($size = null, $attr = [], $lazy = false)
     {
-        if ($lazy) {
-            if (isset($attr['class'])) {
-                $attr['class'] .= ' lazy';
-            } else {
-                $attr['class'] = 'lazy';
-            }
-        }
-
         $srcset = wp_get_attachment_image_srcset($this->id(), $size);
 
         $attr['width'] = $this->getWidth($size);
         $attr['height'] = $this->getHeight($size);
 
-        return $lazy
-            ? '<img data-src="' . $this->url($size) . '" alt="' . $this->alt() . '" title="' . $this->title() . '"' . $this->makeAttr($attr) . ' data-srcset="'. $srcset .'" sizes="100vw">'
-            : '<img src="' . $this->url($size) . '" alt="' . $this->alt() . '" title="' . $this->title() . '"' . $this->makeAttr($attr) . ' srcset="'. $srcset .'" sizes="100vw">';
+        return '<img src="' . $this->url($size) . '" loading="lazy" alt="' . $this->alt() . '" title="' . $this->title() . '"' . $this->makeAttr($attr) . ' srcset="'. $srcset .'" sizes="100vw">';
     }
 
     /**

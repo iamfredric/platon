@@ -148,7 +148,7 @@ class Application
         $dependencies = [];
 
         foreach ($method->getParameters() as $parameter) {
-            $dependencies[] = $this->make($parameter->getClass()->getName());
+            $dependencies[] = $this->make($parameter->getType()->getName());
         }
 
         return $method->invokeArgs(

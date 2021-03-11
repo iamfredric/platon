@@ -112,8 +112,8 @@ class ImageSize
             [$width, $height] = explode('x', $this->name);
 
             $this->width($width)
-                 ->height($height)
-                 ->crop();
+                 ->height($height);
+
         }
     }
 }
