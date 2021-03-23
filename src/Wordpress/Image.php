@@ -154,21 +154,36 @@ class Image
     }
 
     /**
-     * @param string $size
-     * @param array $attr optional
-     *
-     * @param bool $lazy deprecated
+     * @param null $size
+     * @param array $attributes
      *
      * @return string
      */
-    public function render($size = null, $attr = [], $lazy = false)
+    public function render($size = null, $attributes = [])
     {
-        $srcset = wp_get_attachment_image_srcset($this->id(), $size);
+        $attributes = collect([
+            'width' => $this->getWidth($size),
+            'height' => $this->getHeight($size),
+            'src' => $this->url($size),
+            'loading' => 'lazy',
+            'alt' => $this->alt(),
+            'title' => $this->title(),
+            'srcset' => $this->srcSet($size),
+            'sizes' => '100vw',
+            'decoding' => 'async'
+        ])->merge($attributes)
+          ->map(fn ($value, $attribute) => "{$attribute}=\"{$value}\"")
+          ->implode(' ');
 
-        $attr['width'] = $this->getWidth($size);
-        $attr['height'] = $this->getHeight($size);
+        return "<img {$attributes}>";
+    }
 
-        return '<img src="' . $this->url($size) . '" loading="lazy" alt="' . $this->alt() . '" title="' . $this->title() . '"' . $this->makeAttr($attr) . ' srcset="'. $srcset .'" sizes="100vw">';
+    /**
+     * @param string $size
+     */
+    public function srcset($size = null)
+    {
+        return wp_get_attachment_image_srcset($this->id(), $size);
     }
 
     /**

@@ -10,8 +10,8 @@
     }
   ],
   "require": {
-    "php": "^7.2|^8.0",
-    "iamfredric/instantiator": "1.0.0",
+    "php": "^7.4|^8.0",
+    "iamfredric/instantiator": "1.0.1",
     "jenssegers/blade": "^1.4",
     "illuminate/collections": "^8.23",
     "nesbot/carbon": "^2.43",
@@ -24,8 +24,5 @@
     "psr-4": {
       "Platon\\": "src/"
     }
-  },
-  "require-dev": {
-    "phpstan/phpstan": "^0.12"
   }
 }
