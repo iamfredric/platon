@@ -2,6 +2,9 @@
 
 namespace Platon\Media;
 
+/**
+ * @mixin \Platon\Media\ImageSize
+ */
 class ImageRegistrator
 {
     /**
@@ -21,7 +24,7 @@ class ImageRegistrator
      */
     public function support(...$types)
     {
-        $this->types = $types;
+        $this->types = array_unique([...$this->types, ...$types]);
 
         return $this;
     }

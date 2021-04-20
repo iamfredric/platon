@@ -2,6 +2,8 @@
 
 namespace Platon\Posttypes;
 
+use Platon\Media\ImageRegistrator;
+
 class Posttype
 {
     /**
@@ -58,6 +60,11 @@ class Posttype
      * @var bool
      */
     protected $queryVar = false;
+
+    /**
+     * @var boolean
+     */
+    protected $showInRest = false;
 
     /**
      * @var array
@@ -284,6 +291,18 @@ class Posttype
     }
 
     /**
+     * @param  boolean $value
+     *
+     * @return $this
+     */
+    public function useGutenberg($value = true)
+    {
+        $this->showInRest = $value;
+
+        return $this;
+    }
+
+    /**
      * @return void
      */
     public function register()
@@ -302,6 +321,7 @@ class Posttype
                 'has_archive' => $this->hasArchives,
                 'query_var' => $this->queryVar,
                 'capability_type' => $this->capabilityType,
+                'show_in_rest' => $this->showInRest,
                 'supports' => $this->supports,
                 'rewrite' => [
                     'slug' => $this->slug ?? $this->id
@@ -331,6 +351,10 @@ class Posttype
         foreach ($this->taxonomies as $taxonomy)
         {
             $taxonomy->register($this->id);
+        }
+
+        if (in_array('thumbnail', $this->supports)) {
+            app(ImageRegistrator::class)->support($this->id);
         }
     }
 }

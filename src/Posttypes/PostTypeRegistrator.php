@@ -2,6 +2,9 @@
 
 namespace Platon\Posttypes;
 
+/**
+ * @mixin \Platon\Posttypes\Posttype
+ */
 class PostTypeRegistrator
 {
     /**

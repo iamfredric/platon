@@ -2,7 +2,10 @@
 
 namespace Platon\Database;
 
-class Paginaton
+use ArrayIterator;
+use IteratorAggregate;
+
+class Paginaton implements IteratorAggregate
 {
     /**
      * @var array
@@ -138,5 +141,13 @@ class Paginaton
     public function offsetUnset($offset)
     {
         unset($this->items[$offset]);
+    }
+
+    /**
+     * @return ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->items);
     }
 }
