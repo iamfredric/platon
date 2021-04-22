@@ -56,6 +56,18 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     protected $attributes;
 
     /**
+     * Model constructor.
+     *
+     * @param \WP_Post|null $post
+     */
+    public function __construct($post = null)
+    {
+        if ($post) {
+            $this->setAttributes($post);
+        }
+    }
+
+    /**
      * Create a new instance
      *
      * @param  \WP_Post $post
@@ -64,11 +76,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public static function make($post)
     {
-        $instance = new static();
-
-        $instance->setAttributes($post);
-
-        return $instance;
+        return new static($post);
     }
 
     /**

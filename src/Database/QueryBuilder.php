@@ -197,7 +197,7 @@ class QueryBuilder
     protected function buildOrderBy($value, $direction = 'ASC')
     {
         $this->setArgument('orderby', $value);
-        $this->setArgument('order', strtolower($direction) === 'ASC' ? 'ASC' : 'DESC');
+        $this->setArgument('order', strtolower($direction) === 'asc' ? 'ASC' : 'DESC');
 
         return $this;
     }
@@ -244,7 +244,7 @@ class QueryBuilder
             return $this->limit($args[0]);
         }
 
-        if ($key === 'orderBy') {
+        if ($key === 'orderby') {
             return $this->buildOrderBy($args[0], $args[1] ?? 'ASC');
         }
 

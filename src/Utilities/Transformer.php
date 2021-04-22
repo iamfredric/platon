@@ -4,6 +4,7 @@ namespace Platon\Utilities;
 
 use Illuminate\Support\Str;
 use Platon\Media\Link;
+use Platon\Utilities\Support\Maps;
 use Platon\Wordpress\Image;
 
 trait Transformer
@@ -52,7 +53,7 @@ trait Transformer
         return $items;
     }
 
-        protected function massage($item, $key)
+    protected function massage($item, $key)
     {
         if (is_array($item) and isset($item['sizes'])) {
             $item = new Image($item);
@@ -70,6 +71,14 @@ trait Transformer
 
         // Transform attribute if defined
         $item = $this->transformItem($key, $item);
+
+        if (empty($item)) {
+            $methodName = (string) Str::of($key)->ucfirst()->prepend('when')->append('IsNull');
+
+            if (method_exists($this, $methodName)) {
+                $item = $this->{$methodName}();
+            }
+        }
 
         return $item;
     }
@@ -146,26 +155,9 @@ trait Transformer
      */
     protected function mapItem($key, $items)
     {
-        if ( ! isset($this->map[$key])) {
-            return $items;
-        }
+        if (! $this->map) return $items;
 
-        if (! $items) {
-            return $items;
-        }
-
-        return collect($items)
-            ->map(function ($item) use ($key) {
-                if (preg_match("/App\\\Models\\\(.*)/", $this->map[$key])) {
-                    return $this->map[$key]::make($item);
-                }
-
-                if ($this->map[$key] == 'object') {
-                    return (object) $item;
-                }
-
-                return new $this->map[$key]($item);
-            });
+        return (new Maps($this->map, $key, $items))->value();
     }
 
     /**
