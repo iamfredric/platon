@@ -28,6 +28,11 @@ class Component
     protected $data = [];
 
     /**
+     * @var array
+     */
+    protected $casts = [];
+
+    /**
      * Component constructor.
      *
      * @param array $data
@@ -50,6 +55,7 @@ class Component
             ->through(AttributesWhenNull::class, $this)
             ->through(MapKeysToCamel::class)
             ->output();
+
     }
 
     /**

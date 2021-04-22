@@ -62,7 +62,7 @@ class Caster
 
                 if ($multiple) {
                     $value = array_map(function ($value) use ($index, $keys, $cast) {
-                        return [$index => $this->cast($value, $index, $keys, $cast)];
+                        return $this->cast($value[$index], $index, $keys, $cast);
                     }, $value);
 
                     $multiple = false;
@@ -90,7 +90,7 @@ class Caster
         if ($key === '*' && count($keys) === 0) {
             return array_map(function ($value) use ($cast) {
                 return (new Casts($value, $cast))->transform();
-            }, $value);
+            }, $value ?: []);
         } elseif ($key === '*' && count($keys) > 0) {
             $key = array_shift($keys);
             return array_map(function ($value) use ($cast, $key, $keys) {

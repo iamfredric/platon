@@ -151,6 +151,8 @@ class Route
 
                 return $classname;
             }
+
+            return $this->endpoint;
         }
 
         return $this->endpoint[0];
@@ -173,7 +175,8 @@ class Route
 
                 return $methodname;
             }
-            // Todo: throw exception
+
+            return '__invoke';
         }
 
         return $this->endpoint[1] ?? null;

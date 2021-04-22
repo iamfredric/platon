@@ -105,7 +105,7 @@ class TransformerTest extends TestCase
             ->transform();
 
         foreach ($transformed['links'] as $link) {
-            $this->assertInstanceOf(Link::class, $link['link']);
+            $this->assertInstanceOf(Link::class, $link);
         }
     }
 
@@ -140,7 +140,7 @@ class TransformerTest extends TestCase
         $this->assertInstanceOf(Link::class, $component->data('casted'));
 
         foreach ($component->data('very') as $nested) {
-            $this->assertInstanceOf(Link::class, $nested['nested']);
+            $this->assertInstanceOf(Link::class, $nested);
         }
 
         $this->assertInstanceOf(Image::class, $component->data('image'));
