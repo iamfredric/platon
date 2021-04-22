@@ -2,8 +2,6 @@
 
 namespace Platon\Support\Transformers;
 
-use stdClass;
-
 class Casts
 {
     /**

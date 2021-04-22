@@ -26,6 +26,7 @@ class AttributeGetters
     {
         foreach ($this->attributes as $key => $item) {
             $methodName = $this->translateKeyToMethodName($key);
+
             if (method_exists($this->instance, $methodName)) {
                 $this->attributes[$key] = $this->instance->{$methodName}($item);
             }

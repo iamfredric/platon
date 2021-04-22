@@ -5,6 +5,7 @@ namespace Platon\Components;
 use Illuminate\Support\Str;
 use Platon\Support\Transformers\AttributeGetters;
 use Platon\Support\Transformers\AttributesWhenNull;
+use Platon\Support\Transformers\AutoCaster;
 use Platon\Support\Transformers\Caster;
 use Platon\Support\Transformers\MapKeysToCamel;
 use Platon\Support\Transformers\Transformations;
@@ -43,7 +44,8 @@ class Component
         unset($data['acf_fc_layout']);
 
         $this->data = (new Transformations($data))
-            ->through(Caster::class, $this->casts)
+            ->through(Caster::class, $this->casts ?? [])
+            ->through(AutoCaster::class)
             ->through(AttributeGetters::class, $this)
             ->through(AttributesWhenNull::class, $this)
             ->through(MapKeysToCamel::class)

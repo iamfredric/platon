@@ -7,6 +7,7 @@ use Platon\Media\Link;
 use Platon\Support\DotNotation;
 use Platon\Support\Transformers\Caster;
 use Platon\Support\Transformers\Casts;
+use Platon\Wordpress\Image;
 use PlatonTest\Examples\ExampleComponent;
 
 class TransformerTest extends TestCase
@@ -116,6 +117,17 @@ class TransformerTest extends TestCase
             'nullable-to-be-transformed' => null,
             'prefixed' => 'hello',
             'casted' => ['url' => '#', 'title' => 'Link'],
+            'image' => [
+                'id' => '',
+                'url' => '',
+                'alt' => '',
+                'description' => '',
+                'width' => '',
+                'height' => '',
+                'caption' => '',
+                'title' => '',
+                'sizes' => []
+            ],
             'very' => [
                 ['nested' => ['url' => '#', 'title' => 'Link']],
                 ['nested' => ['url' => '#', 'title' => 'Link']]
@@ -130,5 +142,7 @@ class TransformerTest extends TestCase
         foreach ($component->data('very') as $nested) {
             $this->assertInstanceOf(Link::class, $nested['nested']);
         }
+
+        $this->assertInstanceOf(Image::class, $component->data('image'));
     }
 }

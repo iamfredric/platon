@@ -27,10 +27,12 @@ class MapKeysToCamel
      */
     public function transform()
     {
-        return (new Collection($this->attributes))
-            ->mapWithKeys(fn ($value, $key) => [
-                Str::camel($key) => $value
-            ])
-            ->toArray();
+        $attributes = [];
+
+        foreach ($this->attributes as $key => $attribute) {
+            $attributes[Str::camel($key)] = $attribute;
+        }
+
+        return $attributes;
     }
 }
