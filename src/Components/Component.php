@@ -2,12 +2,15 @@
 
 namespace Platon\Components;
 
-use Platon\Utilities\Transformer;
+use Illuminate\Support\Str;
+use Platon\Support\Transformers\AttributeGetters;
+use Platon\Support\Transformers\AttributesWhenNull;
+use Platon\Support\Transformers\Caster;
+use Platon\Support\Transformers\MapKeysToCamel;
+use Platon\Support\Transformers\Transformations;
 
 class Component
 {
-    use Transformer;
-
     /**
      * @var string
      */
@@ -39,7 +42,12 @@ class Component
 
         unset($data['acf_fc_layout']);
 
-        $this->data = $this->transform($data);
+        $this->data = (new Transformations($data))
+            ->through(Caster::class, $this->casts)
+            ->through(AttributeGetters::class, $this)
+            ->through(AttributesWhenNull::class, $this)
+            ->through(MapKeysToCamel::class)
+            ->output();
     }
 
     /**
@@ -56,5 +64,14 @@ class Component
         }
 
         return view($view, $this->data);
+    }
+
+    public function data($key = null)
+    {
+        if ($key) {
+            return $this->data[Str::camel($key)];
+        }
+
+        return $this->data;
     }
 }

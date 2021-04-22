@@ -34,6 +34,7 @@ trait Transformer
         $items = [];
 
         foreach ($data as $key => $item) {
+
             $key = Str::camel($key);
 
             // Auto cast images to Image object
