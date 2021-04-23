@@ -9,6 +9,8 @@ use Platon\Support\Transformers\AutoCaster;
 use Platon\Support\Transformers\Caster;
 use Platon\Support\Transformers\MapKeysToCamel;
 use Platon\Support\Transformers\Transformations;
+use ReflectionClass;
+use ReflectionMethod;
 
 class Component
 {
@@ -48,6 +50,8 @@ class Component
 
         unset($data['acf_fc_layout']);
 
+        $data = $this->appendDataAttributes($data);
+
         $this->data = (new Transformations($data))
             ->through(Caster::class, $this->casts ?? [])
             ->through(AutoCaster::class)
@@ -77,9 +81,24 @@ class Component
     public function data($key = null)
     {
         if ($key) {
-            return $this->data[Str::camel($key)];
+            return $this->data[Str::camel($key)] ?? null;
         }
 
         return $this->data;
+    }
+
+    protected function appendDataAttributes(array $data)
+    {
+        $reflection = new ReflectionClass($this);
+
+        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if (str_starts_with($method->getName(), 'append')) {
+                $key = strtolower(str_replace(['append', 'Attribute'], '', $method->getName()));
+
+                $data[$key] = $this->{$method->getName()}();
+            }
+        }
+
+        return $data;
     }
 }

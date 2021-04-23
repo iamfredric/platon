@@ -20,4 +20,9 @@ class ExampleComponent extends \Platon\Components\Component
     {
         return "very-much-{$value}";
     }
+
+    public function appendAppendedAttribute()
+    {
+        return 'This attribute has been appended';
+    }
 }

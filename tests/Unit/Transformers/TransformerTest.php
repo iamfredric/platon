@@ -137,6 +137,7 @@ class TransformerTest extends TestCase
         $this->assertEquals('i have been nullified', $component->data('nullable-to-be-transformed'));
         $this->assertEquals('very-much-hello', $component->data('prefixed'));
 
+        $this->assertEquals('This attribute has been appended', $component->data('appended'));
         $this->assertInstanceOf(Link::class, $component->data('casted'));
 
         foreach ($component->data('very') as $nested) {
