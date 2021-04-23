@@ -92,7 +92,7 @@ class Component
         $reflection = new ReflectionClass($this);
 
         foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if (str_starts_with($method->getName(), 'append')) {
+            if (str_starts_with($method->getName(), 'append') && str_ends_with($method->getName(), 'Attribute')) {
                 $key = strtolower(str_replace(['append', 'Attribute'], '', $method->getName()));
 
                 $data[$key] = $this->{$method->getName()}();
