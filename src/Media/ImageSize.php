@@ -32,6 +32,8 @@ class ImageSize
     public function __construct($name)
     {
         $this->name = $name;
+
+        $this->extractSizeFromName();
     }
 
     /**
@@ -93,10 +95,7 @@ class ImageSize
      */
     public function register()
     {
-        $this->extractSizeFromName();
-
         add_image_size($this->name, $this->width, $this->height, $this->crop);
-        add_image_size($this->name . '@2x', $this->width * 2, $this->height * 2, $this->crop);
     }
 
     /**

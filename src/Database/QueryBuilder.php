@@ -97,7 +97,7 @@ class QueryBuilder
 
         $this->setArgument('posts_per_page', $limit);
         $this->setArgument('paged', get_query_var('paged') ?: 1);
-        $query = new \WP_Query($this->getArguments());
+        $query = WpQuery::make($this->getArguments());
 
         foreach ((array) $query->get_posts() as $post) {
             $posts[] = $this->buildItem($post);

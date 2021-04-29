@@ -162,11 +162,11 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     /**
      * Saves current instances in database
      *
-     * @return \Platon\Database\Model
+     * @return void
      */
     public function save()
     {
-        return static::create($this->toWordpressArray());
+        wp_update_post($this->toWordpressArray());
     }
 
     /**
@@ -371,7 +371,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
             return "menu_{$key}";
         }
 
-        if (in_array($key, ['comment_status', 'ping_status', 'comment_count', 'menu_order'])) {
+        if (in_array($key, ['comment_status', 'ping_status', 'comment_count', 'menu_order', 'filter', 'guid', 'pinged', 'to_ping'])) {
             return $key;
         }
 
@@ -401,6 +401,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
             $items[$this->translateAttributeKeyToWordpress($key)] = $value;
         }
 
+        ksort($items);
         return $items;
     }
 

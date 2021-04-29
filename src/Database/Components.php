@@ -7,7 +7,7 @@ trait Components
     /**
      * @param $components
      *
-     * @return \Incognito\Components\Components
+     * @return \Platon\Components\Components
      */
     public function getComponentsAttribute($components)
     {
