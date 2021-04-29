@@ -6,7 +6,6 @@ use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 use Platon\Database\Model;
 use Platon\Database\Paginaton;
-use Platon\Database\QueryBuilder;
 use Platon\Database\WpQuery;
 
 class ModelTest extends TestCase

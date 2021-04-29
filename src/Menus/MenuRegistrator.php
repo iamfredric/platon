@@ -27,7 +27,7 @@ class MenuRegistrator
      */
     public function register($slug, $label)
     {
-        register_nav_menu($slug, __($label, $this->themeId));
+        register_nav_menu($slug, trans($label, $this->themeId));
     }
 
     /**
