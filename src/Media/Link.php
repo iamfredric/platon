@@ -34,7 +34,7 @@ class Link
      */
     public function render($class = '')
     {
-        if ($this->get('taget')) {
+        if ($this->get('target')) {
             return '<a href="' . $this->get('url') . '" class="' . $class . '" target="' . $this->get('target') . '" rel="noopener">' . $this->get('title') . '</a>';
         }
 
