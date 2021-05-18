@@ -2,9 +2,12 @@
 
 namespace Platon\Components;
 
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-class Components
+class Components implements Arrayable, Jsonable
 {
     /**
      * @var array
@@ -97,5 +100,16 @@ class Components
         }
 
         return new Component($component, $this->prefix);
+    }
+
+    public function toArray()
+    {
+        return (new Collection($this->components))
+            ->toArray();
+    }
+
+    public function toJson($options = 0)
+    {
+        return json_encode($this->toArray(), $options);
     }
 }

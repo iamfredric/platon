@@ -15,6 +15,7 @@ use Platon\ServiceProviders\RouteServiceProvider;
 use Platon\ServiceProviders\ServiceProvider;
 use Platon\ServiceProviders\SupportServiceProvider;
 use Platon\ServiceProviders\ViewServiceProvider;
+use Platon\ServiceProviders\WpdbServiceProvider;
 use ReflectionMethod;
 
 class Application
@@ -58,7 +59,8 @@ class Application
         AcfAdminServiceProvider::class,
         HookServiceProvider::class,
         SupportServiceProvider::class,
-        LoginServiceProvider::class
+        LoginServiceProvider::class,
+        WpdbServiceProvider::class
     ];
 
     /**

@@ -2,7 +2,10 @@
 
 namespace Platon\Wordpress;
 
-class Image
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
+
+class Image implements Arrayable, Jsonable
 {
     /**
      * @var boolean
@@ -49,6 +52,8 @@ class Image
      */
     private $thumbnailDimensions = [];
 
+    protected $attributes = [];
+
     /**
      * @param array $thumbnail
      */
@@ -58,6 +63,7 @@ class Image
             return;
         }
 
+        $this->attributes = $thumbnail;
         $this->hasimage = true;
         $this->thumbnailId = $thumbnail['id'];
         $this->thumbnailTitle = $thumbnail['title'];
@@ -299,5 +305,15 @@ class Image
     public function __toString()
     {
         return $this->url();
+    }
+
+    public function toArray()
+    {
+        return $this->attributes ?: [];
+    }
+
+    public function toJson($options = 0)
+    {
+        return json_encode($this->toArray());
     }
 }

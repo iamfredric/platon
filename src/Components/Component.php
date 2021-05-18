@@ -2,7 +2,10 @@
 
 namespace Platon\Components;
 
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 use Platon\Support\Transformers\AttributeGetters;
 use Platon\Support\Transformers\AttributesWhenNull;
 use Platon\Support\Transformers\AutoCaster;
@@ -12,7 +15,7 @@ use Platon\Support\Transformers\Transformations;
 use ReflectionClass;
 use ReflectionMethod;
 
-class Component
+class Component implements Arrayable, Jsonable
 {
     /**
      * @var string
@@ -100,5 +103,30 @@ class Component
         }
 
         return $data;
+    }
+
+    public function view()
+    {
+        return $this->view;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'view' => $this->view,
+            'data' => (new Collection($this->data))
+                ->mapWithKeys(function ($value, $key) {
+                    if (is_array($value)) {
+                        $value = (new Collection($value));
+                    }
+
+                    return [$key => $value instanceof Arrayable ? $value->toArray() : $value];
+                })
+        ];
+    }
+
+    public function toJson($options = 0)
+    {
+        return json_encode($this->toArray(), $options);
     }
 }
