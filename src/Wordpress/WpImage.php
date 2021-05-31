@@ -2,7 +2,10 @@
 
 namespace Platon\Wordpress;
 
-class WpImage
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
+
+class WpImage implements Arrayable, Jsonable
 {
     /**
      * @var int
@@ -120,5 +123,15 @@ class WpImage
     public function exists()
     {
         return has_post_thumbnail($this->postId);
+    }
+
+    public function toArray(): array
+    {
+        return acf_get_attachment($this->id()) ?: [];
+    }
+
+    public function toJson($options = 0): string
+    {
+        return json_encode($this->toArray(), $options);
     }
 }

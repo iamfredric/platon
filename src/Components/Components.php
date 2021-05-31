@@ -84,7 +84,7 @@ class Components implements Arrayable, Jsonable
             return (string) Str::of($name)->camel()->ucfirst()->prepend('\\App\\Components\\')->append('Component');
         }
 
-        return (string) Str::of($name)->camel()->ucfirst()->prepend("\\App\\Components\\{$this->prefix}")->append('Component');
+        return (string) Str::of($name)->camel()->ucfirst()->prepend("\\App\\Components\\{$this->prefix}\\")->append('Component');
     }
 
     /**
