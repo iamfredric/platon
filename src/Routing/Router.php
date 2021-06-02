@@ -25,6 +25,11 @@ class Router
     /**
      * @var array
      */
+    protected $uris = [];
+
+    /**
+     * @var array
+     */
     protected $apiRoutes = [];
 
     /**
@@ -51,6 +56,11 @@ class Router
         });
 
         add_filter('template_include', function ($template) {
+
+            if (in_array(get_query_var('pagename'), array_keys($this->uris))) {
+                return $this->customRouteResponse($this->uris[get_query_var('pagename')]);
+            }
+
             $originalTemplate = $template;
 
             if (strpos($template, '.php') > -1) {
@@ -76,6 +86,21 @@ class Router
 
             return $originalTemplate;
         });
+
+        // Register custom routes
+        foreach ($this->uris as $uri) {
+            add_action('init', function () use ($uri) {
+                add_rewrite_rule($uri->getRegex(), $uri->getQuery(), 'top');
+            });
+
+            add_action('query_vars', function ($vars) use ($uri) {
+                foreach ($uri->getQueryVars() as $var) {
+                    array_push($vars, $var);
+                }
+
+                return $vars;
+            });
+        }
     }
 
     /**
@@ -104,6 +129,17 @@ class Router
     }
 
     /**
+     * @param $uri
+     * @param $endpoint
+     */
+    public function get($uri, $endpoint)
+    {
+        $route = new CustomRoute($uri, $endpoint);
+
+        $this->uris[$route->id()] = $route;
+    }
+
+    /**
      * @param string $route
      *
      * @return bool
@@ -126,6 +162,69 @@ class Router
             ? $route->call()
             : $this->app->call($route->getClassName(), $route->getMethodName());
 
+
+        if ($response instanceof Response) {
+            echo $response;
+            exit;
+        }
+
+        echo new Response(
+            $response
+        );
+    }
+
+    protected function customRouteResponse(CustomRoute $route)
+    {
+        $args = [];
+        $dependencies = [];
+
+        foreach ($route->getQueryVars() as $arg) {
+            $args[$arg] = get_query_var($arg);
+        }
+
+        if ($route->isCallable()) {
+            $callable = new \ReflectionFunction($route->getCallable());
+
+            foreach ($callable->getParameters() as $parameter) {
+                if ($parameter->getType()) {
+                    $dependencies[] = $this->app->make($parameter->getType()->getName());
+                } elseif (isset($args[$parameter->getName()])) {
+                    $dependencies[] = $args[$parameter->getName()];
+                } else {
+                    $dependencies[] = array_shift($args);
+                }
+            }
+
+            $response = $callable->invokeArgs($dependencies);
+
+            if ($response instanceof Response) {
+                echo $response;
+                exit;
+            }
+
+            echo new Response(
+                $response
+            );
+            return;
+        }
+
+        $class = $this->app->call($route->getClassName());
+
+        $method = new \ReflectionMethod($class, $route->getMethodName());
+
+        foreach ($method->getParameters() as $parameter) {
+            if ($parameter->getType()) {
+                $dependencies[] = $this->app->make($parameter->getType()->getName());
+            } elseif (isset($args[$parameter->getName()])) {
+                $dependencies[] = $args[$parameter->getName()];
+            } else {
+                $dependencies[] = array_shift($args);
+            }
+        }
+
+        $response = $method->invokeArgs(
+            $class, $dependencies
+        );
 
         if ($response instanceof Response) {
             echo $response;

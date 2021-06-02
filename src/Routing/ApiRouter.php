@@ -65,7 +65,9 @@ class ApiRouter
         $dependencies = [];
 
         foreach ($method->getParameters() as $parameter) {
-            if (in_array($parameter->getName(), $params)) {
+            if ($parameter->getClass()->getName() === 'WP_REST_Request') {
+                $dependencies[] = $request;
+            } elseif (in_array($parameter->getName(), $params)) {
                 $dependencies[] = $request->get_param($parameter->getName());
             } elseif ($parameter->allowsNull()) {
                 $dependencies[] = null;
