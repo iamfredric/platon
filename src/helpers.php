@@ -173,3 +173,18 @@ if (! function_exists('trans'))
         return __($string, config('app.theme-slug'));
     }
 }
+
+if (! function_exists('csrf_token')) {
+    function csrf_token()
+    {
+        if(session_id() == '') {
+            session_start();
+        }
+
+        if (! $_SESSION['_token'] ?? null) {
+            $_SESSION['_token'] = \Illuminate\Support\Str::random(64);
+        }
+
+        return $_SESSION['_token'];
+    }
+}

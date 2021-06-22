@@ -52,7 +52,7 @@ class Request
 
     public function protectAgainstCsrf()
     {
-        if (wp_get_session_token() !== $this->csrfToken()) {
+        if (csrf_token() !== $this->csrfToken()) {
             throw new CsrfException();
         }
     }
