@@ -187,7 +187,6 @@ class Application
                     throw new \Exception('Unfinished');
                 }
 
-
                 return $reflection->newInstanceArgs($dependencies);
             }
 

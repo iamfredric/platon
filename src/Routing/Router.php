@@ -162,7 +162,6 @@ class Router
             ? $route->call()
             : $this->app->call($route->getClassName(), $route->getMethodName());
 
-
         if ($response instanceof Response) {
             echo $response;
             exit;
