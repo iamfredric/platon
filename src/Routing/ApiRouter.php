@@ -37,6 +37,11 @@ class ApiRouter
         $this->routes[] = new ApiRoute('post', $uri, $endpoint);
     }
 
+    public function delete($uri, $endpoint)
+    {
+        $this->routes[] = new ApiRoute('delete', $uri, $endpoint);
+    }
+
     public function finalize()
     {
         add_action('rest_api_init', function () {
