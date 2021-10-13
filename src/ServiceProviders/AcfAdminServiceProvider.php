@@ -2,6 +2,7 @@
 
 namespace Platon\ServiceProviders;
 
+use Illuminate\Support\Collection;
 use Platon\Application;
 use Platon\Facades\Hook;
 
@@ -34,7 +35,9 @@ class AcfAdminServiceProvider extends ServiceProvider
                 acf_add_options_page($options);
 
                 if (isset($options['share']) && $options['share'] === true) {
-                    $app->make('view')->share($options['post_id'], collect(get_fields($options['post_id'])));
+                    $collection = $option['collection'] ?? Collection::class;
+
+                    $app->make('view')->share($options['post_id'], new $collection(get_fields($options['post_id'])));
                 }
 
                 return;
@@ -45,7 +48,9 @@ class AcfAdminServiceProvider extends ServiceProvider
                 acf_add_options_page($option);
 
                 if (isset($option['share']) && $option['share'] === true) {
-                    $app->make('view')->share($option['post_id'], collect(get_fields($option['post_id'])));
+                    $collection = $option['collection'] ?? Collection::class;
+
+                    $app->make('view')->share($option['post_id'], new $collection(get_fields($option['post_id'])));
                 }
             }
         });

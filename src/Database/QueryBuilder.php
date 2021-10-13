@@ -6,6 +6,8 @@ use Illuminate\Support\Collection;
 
 class QueryBuilder
 {
+    use Macroable;
+
     /**
      * Query arguments
      *
@@ -67,7 +69,11 @@ class QueryBuilder
     {
         $instance = new static($model);
 
-        return $instance->buildItem(get_post($id));
+        if ($post = get_post($id)) {
+            return $instance->buildItem($post);
+        }
+
+        return null;
     }
 
     /**
@@ -104,18 +110,6 @@ class QueryBuilder
         }
 
         return new Paginaton($posts, $query);
-    }
-
-    /**
-     * @param int $limit
-     *
-     * @return $this
-     */
-    public function limit($limit)
-    {
-        $this->setArgument('posts_per_page', $limit);
-
-        return $this;
     }
 
     /**
@@ -179,49 +173,75 @@ class QueryBuilder
         $this->arguments[$key] = $value;
     }
 
-    /**
-     * Query builder
-     *
-     * @param string $key
-     * @param mixed $value
-     *
-     * @return $this
-     */
-    protected function buildWhere($key, $value)
+    public function setMetaArgument($key, $compare, $value = null)
     {
-        $this->setArgument($key, $value);
-
-        return $this;
-    }
-
-    protected function buildOrderBy($value, $direction = 'ASC')
-    {
-        $this->setArgument('orderby', $value);
-        $this->setArgument('order', strtolower($direction) === 'asc' ? 'ASC' : 'DESC');
-
-        return $this;
-    }
-
-    /**
-     * Metaquery builder
-     *
-     * @param array $args
-     *
-     * @return $this
-     */
-    protected function buildMetaWhere($args)
-    {
-        $key = $args[0];
-        $compare = count($args) == 3 ? $args[1] : '=';
-        $value = count($args) == 3 ? $args[2] : $args[1];
-
         $this->metaArguments[] = [
             'key' => $key,
-            'value' => $value,
-            'compare' => $compare
+            'value' => $value === null ? $compare : $value,
+            'compare' => $value === null ? '=' : $compare
         ];
+    }
 
-        return $this;
+    /**
+     * @param $key
+     * @param $compare
+     * @param string|null $value
+     *
+     * @return void
+     */
+    public function scopeWhereMeta($key, $compare, $value = null)
+    {
+        $this->setMetaArgument($key, $compare, $value);
+    }
+
+    /**
+     * @param $orderBy
+     * @param string $direction
+     *
+     * @return void
+     */
+    public function scopeOrderBy($orderBy, $direction = 'asc')
+    {
+        $this->setArgument('orderby', $orderBy);
+        $this->setArgument('order', strtolower($direction) === 'asc' ? 'ASC' : 'DESC');
+    }
+
+    /**
+     * @return void
+     */
+    public function scopeWhere()
+    {
+        $this->setArgument($key, $value);
+    }
+
+    /**
+     * @param $limit
+     *
+     * @return void
+     */
+    public function scopeLimit($limit)
+    {
+        $this->setArgument('posts_per_page', $limit);
+    }
+
+    /**
+     * @param string $orderBy
+     *
+     * @return void
+     */
+    public function scopeLatest($orderBy = 'date')
+    {
+        $this->orderBy($orderBy, 'desc');
+    }
+
+    /**
+     * @param string $orderBy
+     *
+     * @return void
+     */
+    public function scopeOldest($orderBy = 'date')
+    {
+        $this->orderBy($orderBy, 'asc');
     }
 
     /**
@@ -234,51 +254,13 @@ class QueryBuilder
      */
     protected function resolveMethodCall($method, $args)
     {
-        list($key, $value) = $this->resolveArgumentsFromMethodCall($method, $args);
-
-        if ($key == 'meta') {
-            return $this->buildMetaWhere($args);
+        if ($this->hasMacro($method)) {
+            $this->resolveMacro($method, $this, ...$args);
+        } elseif (method_exists($this, $name = 'scope'. ucfirst($method))) {
+            $this->{$name}(...$args);
         }
 
-        if ($key == 'limit') {
-            return $this->limit($args[0]);
-        }
-
-        if ($key === 'orderby') {
-            return $this->buildOrderBy($args[0], $args[1] ?? 'ASC');
-        }
-
-        if ($key === 'latest') {
-            return $this->buildOrderBy($args[0] ?? 'published_at', 'DESC');
-        }
-
-        if ($key === 'oldest') {
-            return $this->buildOrderBy($args[0] ?? 'published_at', 'ASC');
-        }
-
-        return $this->buildWhere($key, $value);
-    }
-
-    /**
-     * Resolves arguments from magic method call
-     *
-     * @param string $method
-     * @param mixed $arguments
-     * @param array $args
-     *
-     * @return array
-     */
-    public function resolveArgumentsFromMethodCall($method, $arguments, $args = [])
-    {
-        if ($method = str_replace('where', '', $method)) {
-            $args[] = strtolower($method);
-        }
-
-        foreach ($arguments as $argument) {
-            $args[] = $argument;
-        }
-
-        return $args;
+        return $this;
     }
 
     /**

@@ -2,12 +2,15 @@
 
 namespace Platon\Components;
 
+use ArrayIterator;
+use Countable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use IteratorAggregate;
 
-class Components implements Arrayable, Jsonable
+class Components implements Arrayable, Countable, IteratorAggregate, Jsonable
 {
     /**
      * @var array
@@ -111,5 +114,15 @@ class Components implements Arrayable, Jsonable
     public function toJson($options = 0)
     {
         return json_encode($this->toArray(), $options);
+    }
+
+    public function count(): int
+    {
+        return count($this->components);
+    }
+
+    public function getIterator(): ArrayIterator
+    {
+        return new ArrayIterator($this->components);
     }
 }
