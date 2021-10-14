@@ -44,7 +44,7 @@ class HookHandler
     protected function resolve($callable, ...$args)
     {
         if (! is_array($callable) && is_callable($callable)) {
-            return $callable($args);
+            return call_user_func_array($callable, ...$args);
         }
 
         [$callable, $method] = is_array($callable) ? $callable : [$callable, 'handle'];

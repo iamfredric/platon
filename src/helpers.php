@@ -170,6 +170,8 @@ if (! function_exists('trans'))
      */
     function trans($string)
     {
+        do_action('platon_translate', $string, config('app.theme-slug'));
+
         return __($string, config('app.theme-slug'));
     }
 }
