@@ -18,7 +18,7 @@ abstract class Block
     {
         echo view(
             str_replace('{name}', $this->view(), config('paths.blocks', 'gutenberg.{$name}')),
-            $this->transform($data)
+            $this->transform(get_fields($data['id']))
         );
     }
 
@@ -26,7 +26,7 @@ abstract class Block
     {
         $items = [];
 
-        foreach ($data['data'] as $key => $value) {
+        foreach ($data as $key => $value) {
             if (! str_starts_with($key, '_')) {
                 $items[$key] = $value;
             }

@@ -209,7 +209,7 @@ class QueryBuilder
     /**
      * @return void
      */
-    public function scopeWhere()
+    public function scopeWhere($key, $value)
     {
         $this->setArgument($key, $value);
     }
