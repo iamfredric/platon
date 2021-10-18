@@ -149,7 +149,6 @@ if (! function_exists('view'))
      * @param array $args
      *
      * @return mixed|object|\Platon\Application
-     * @throws \ReflectionException
      */
     function view($name = null, $args = [])
     {
@@ -172,7 +171,7 @@ if (! function_exists('trans'))
     {
         do_action('platon_translate', $string, config('app.theme-slug'));
 
-        return __($string, config('app.theme-slug'));
+        return __($string, config('app.theme-slug')) ?: $string;
     }
 }
 
