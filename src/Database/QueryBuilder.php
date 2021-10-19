@@ -3,7 +3,16 @@
 namespace Platon\Database;
 
 use Illuminate\Support\Collection;
-
+use Platon\Exceptions\BuilderCallNotFoundException;
+/**
+ * @method \Platon\Database\QueryBuilder where($key, $value)
+ * @method \Platon\Database\QueryBuilder whereMeta($key, $compare, $value = null)
+ * @method \Platon\Database\QueryBuilder whereTaxonomyIn($taxonomy, $terms, $field = 'term_id')
+ * @method \Platon\Database\QueryBuilder orderBy($orderBy, $direction = 'asc')
+ * @method \Platon\Database\QueryBuilder limit($limit)
+ * @method \Platon\Database\QueryBuilder latest($orderBy = 'date')
+ * @method \Platon\Database\QueryBuilder oldest($orderBy = 'date')
+ */
 class QueryBuilder
 {
     use Macroable;
@@ -173,6 +182,15 @@ class QueryBuilder
         $this->arguments[$key] = $value;
     }
 
+    public function setTaxQuery(array $query)
+    {
+        if (! isset($this->arguments['tax_query'])) {
+            $this->arguments['tax_query'] = [];
+        }
+
+        $this->arguments['tax_query'][] = $query;
+    }
+
     public function setMetaArgument($key, $compare, $value = null)
     {
         $this->metaArguments[] = [
@@ -189,9 +207,19 @@ class QueryBuilder
      *
      * @return void
      */
-    public function scopeWhereMeta($key, $compare, $value = null)
+    protected function scopeWhereMeta($key, $compare, $value = null)
     {
         $this->setMetaArgument($key, $compare, $value);
+    }
+
+    /**
+     * @param string $taxonomy
+     * @param array<string|int>|string $terms
+     * @param string $field
+     */
+    protected function scopeWhereTaxonomyIn($taxonomy, $terms, $field = 'term_id')
+    {
+        $this->setTaxQuery(compact('taxonomy', 'terms', 'field'));
     }
 
     /**
@@ -200,7 +228,7 @@ class QueryBuilder
      *
      * @return void
      */
-    public function scopeOrderBy($orderBy, $direction = 'asc')
+    protected function scopeOrderBy($orderBy, $direction = 'asc')
     {
         $this->setArgument('orderby', $orderBy);
         $this->setArgument('order', strtolower($direction) === 'asc' ? 'ASC' : 'DESC');
@@ -209,7 +237,7 @@ class QueryBuilder
     /**
      * @return void
      */
-    public function scopeWhere($key, $value)
+    protected function scopeWhere($key, $value)
     {
         $this->setArgument($key, $value);
     }
@@ -219,7 +247,7 @@ class QueryBuilder
      *
      * @return void
      */
-    public function scopeLimit($limit)
+    protected function scopeLimit($limit)
     {
         $this->setArgument('posts_per_page', $limit);
     }
@@ -229,7 +257,7 @@ class QueryBuilder
      *
      * @return void
      */
-    public function scopeLatest($orderBy = 'date')
+    protected function scopeLatest($orderBy = 'date')
     {
         $this->orderBy($orderBy, 'desc');
     }
@@ -239,7 +267,7 @@ class QueryBuilder
      *
      * @return void
      */
-    public function scopeOldest($orderBy = 'date')
+    protected function scopeOldest($orderBy = 'date')
     {
         $this->orderBy($orderBy, 'asc');
     }
@@ -256,11 +284,15 @@ class QueryBuilder
     {
         if ($this->hasMacro($method)) {
             $this->resolveMacro($method, $this, ...$args);
+
+            return $this;
         } elseif (method_exists($this, $name = 'scope'. ucfirst($method))) {
             $this->{$name}(...$args);
+
+            return $this;
         }
 
-        return $this;
+        throw BuilderCallNotFoundException::methodNotFound($method, $args);
     }
 
     /**
@@ -278,7 +310,7 @@ class QueryBuilder
      * @param string $method
      * @param mixed $args
      *
-     * @return QueryBuilder|Collection|\Platon\Database\Model
+     * @return QueryBuilder
      */
     public static function __callStatic($method, $args)
     {

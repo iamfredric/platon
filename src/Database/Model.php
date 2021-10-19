@@ -10,6 +10,15 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use ReflectionClass;
 
+/**
+ * @method static \Platon\Database\QueryBuilder where($key, $value)
+ * @method static \Platon\Database\QueryBuilder whereMeta($key, $compare, $value = null)
+ * @method static \Platon\Database\QueryBuilder whereTaxonomyIn($taxonomy, $terms, $field = 'term_id')
+ * @method static \Platon\Database\QueryBuilder orderBy($orderBy, $direction = 'asc')
+ * @method static \Platon\Database\QueryBuilder limit($limit)
+ * @method static \Platon\Database\QueryBuilder latest($orderBy = 'date')
+ * @method static \Platon\Database\QueryBuilder oldest($orderBy = 'date')
+ */
 class Model implements Arrayable, Jsonable, ArrayAccess
 {
     /**
@@ -495,6 +504,14 @@ class Model implements Arrayable, Jsonable, ArrayAccess
         }
 
         return $this->get($variable);
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    public static function query(): QueryBuilder
+    {
+        return (new QueryBuilder(new static()));
     }
 
     /**

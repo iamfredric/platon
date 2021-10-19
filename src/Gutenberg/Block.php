@@ -12,14 +12,27 @@ use Platon\Support\Transformers\Transformations;
 
 abstract class Block
 {
+    protected array $data = [];
+
     abstract public function title(): string;
 
     public function render($data)
     {
+        $this->data = get_fields($data['id']) ?? [];
+
         echo view(
             str_replace('{name}', $this->view(), config('paths.blocks', 'gutenberg.{$name}')),
-            $this->transform(get_fields($data['id']))
+            $this->transform($this->data)
         );
+    }
+
+    public function data(?string $key = null, $default = null)
+    {
+        if ($key) {
+            return $this->data[$key] ?? $default;
+        }
+
+        return $this->data;
     }
 
     protected function transform(?array $data)
