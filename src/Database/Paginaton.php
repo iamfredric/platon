@@ -52,6 +52,13 @@ class Paginaton implements IteratorAggregate
         return get_previous_posts_link($label);
     }
 
+    public function prevUrl()
+    {
+        if ($this->currentPage() > 1) {
+            return get_previous_posts_page_link();
+        }
+    }
+
     /**
      * @param string $label
      *
@@ -60,6 +67,13 @@ class Paginaton implements IteratorAggregate
     public function next($label = 'Next')
     {
         return get_next_posts_link($label);
+    }
+
+    public function nextUrl()
+    {
+        if ($this->currentPage() < $this->maxPage()) {
+            return get_next_posts_page_link();
+        }
     }
 
     /**

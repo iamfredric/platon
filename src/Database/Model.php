@@ -192,6 +192,10 @@ class Model implements Arrayable, Jsonable, ArrayAccess
             return null;
         }
 
+        if ($this->isTermDefined($key)) {
+            return $this->term($key);
+        }
+
         $value = $this->attributes->get($key);
 
         // Filter value through the date casting method,
@@ -525,5 +529,19 @@ class Model implements Arrayable, Jsonable, ArrayAccess
         $instance = new static();
 
         return (new QueryBuilder($instance))->__call($method, $args);
+    }
+
+    protected function isTermDefined(string $key): bool
+    {
+        return isset($this->terms[$key]);
+    }
+
+    protected function term(string $key)
+    {
+        if (! $this->attributes->has("terms.{$key}")) {
+            $this->attributes->put("terms.{$key}", $this->terms[$key]::forModel($this));
+        }
+
+        return $this->attributes->get("terms.{$key}");
     }
 }
