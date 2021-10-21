@@ -6,8 +6,8 @@ use Illuminate\Support\Collection;
 use Platon\Exceptions\BuilderCallNotFoundException;
 /**
  * @method \Platon\Database\Builder where($key, $value)
- * @method \Platon\Database\Builder whereMeta($key, $compare, $value = null)
- * @method \Platon\Database\Builder orWhereMeta($key, $compare, $value = null)
+ * @method \Platon\Database\Builder whereMeta($key, $compare = null, $value = null)
+ * @method \Platon\Database\Builder orWhereMeta($key, $compare = null, $value = null)
  * @method \Platon\Database\Builder whereTaxonomyIn($taxonomy, $terms, $field = 'term_id')
  * @method \Platon\Database\Builder orderBy($orderBy, $direction = 'asc')
  * @method \Platon\Database\Builder limit($limit)
@@ -219,7 +219,7 @@ class Builder
         $this->metaBuilder->where($key, $compare, $value);
     }
 
-    protected function scopeOrWhereMeta($key, $compare, $value = null)
+    protected function scopeOrWhereMeta($key, $compare = null, $value = null)
     {
         if (! $this->metaBuilder) {
             $this->metaBuilder = new MetaBuilder();

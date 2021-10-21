@@ -23,6 +23,17 @@ class MetaBuilder
         return $this->setArgument($key, $compare, $value);
     }
 
+    public function whereNotNull($key): MetaBuilder
+    {
+        $this->arguments[] = [
+            'key' => $key,
+            'compare' => '!=',
+            'value' => ''
+        ];
+
+        return $this;
+    }
+
     public function orWhere(...$args): MetaBuilder
     {
         $this->relation = 'OR';
