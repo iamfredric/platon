@@ -11,13 +11,13 @@ use Illuminate\Support\Str;
 use ReflectionClass;
 
 /**
- * @method static \Platon\Database\QueryBuilder where($key, $value)
- * @method static \Platon\Database\QueryBuilder whereMeta($key, $compare, $value = null)
- * @method static \Platon\Database\QueryBuilder whereTaxonomyIn($taxonomy, $terms, $field = 'term_id')
- * @method static \Platon\Database\QueryBuilder orderBy($orderBy, $direction = 'asc')
- * @method static \Platon\Database\QueryBuilder limit($limit)
- * @method static \Platon\Database\QueryBuilder latest($orderBy = 'date')
- * @method static \Platon\Database\QueryBuilder oldest($orderBy = 'date')
+ * @method static \Platon\Database\Builder where($key, $value)
+ * @method static \Platon\Database\Builder whereMeta($key, $compare, $value = null)
+ * @method static \Platon\Database\Builder whereTaxonomyIn($taxonomy, $terms, $field = 'term_id')
+ * @method static \Platon\Database\Builder orderBy($orderBy, $direction = 'asc')
+ * @method static \Platon\Database\Builder limit($limit)
+ * @method static \Platon\Database\Builder latest($orderBy = 'date')
+ * @method static \Platon\Database\Builder oldest($orderBy = 'date')
  */
 class Model implements Arrayable, Jsonable, ArrayAccess
 {
@@ -107,7 +107,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public static function find($id)
     {
-        return QueryBuilder::find($id, new static());
+        return Builder::find($id, new static());
     }
 
     /**
@@ -119,7 +119,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public static function paginate($limit = null)
     {
-        return (new QueryBuilder(new static()))->paginate($limit);
+        return (new Builder(new static()))->paginate($limit);
     }
 
     /**
@@ -127,7 +127,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public static function all()
     {
-        return QueryBuilder::all(new static());
+        return Builder::all(new static());
     }
 
     /**
@@ -511,24 +511,24 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     }
 
     /**
-     * @return QueryBuilder
+     * @return Builder
      */
-    public static function query(): QueryBuilder
+    public static function query(): Builder
     {
-        return (new QueryBuilder(new static()));
+        return (new Builder(new static()));
     }
 
     /**
      * @param string $method
      * @param mixed $args
      *
-     * @return \Platon\Database\QueryBuilder
+     * @return \Platon\Database\Builder
      */
     public static function __callStatic($method, $args)
     {
         $instance = new static();
 
-        return (new QueryBuilder($instance))->__call($method, $args);
+        return (new Builder($instance))->__call($method, $args);
     }
 
     protected function isTermDefined(string $key): bool

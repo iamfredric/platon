@@ -5,16 +5,16 @@ namespace Platon\Database;
 use Illuminate\Support\Collection;
 use Platon\Exceptions\BuilderCallNotFoundException;
 /**
- * @method \Platon\Database\QueryBuilder where($key, $value)
- * @method \Platon\Database\QueryBuilder whereMeta($key, $compare, $value = null)
- * @method \Platon\Database\QueryBuilder orWhereMeta($key, $compare, $value = null)
- * @method \Platon\Database\QueryBuilder whereTaxonomyIn($taxonomy, $terms, $field = 'term_id')
- * @method \Platon\Database\QueryBuilder orderBy($orderBy, $direction = 'asc')
- * @method \Platon\Database\QueryBuilder limit($limit)
- * @method \Platon\Database\QueryBuilder latest($orderBy = 'date')
- * @method \Platon\Database\QueryBuilder oldest($orderBy = 'date')
+ * @method \Platon\Database\Builder where($key, $value)
+ * @method \Platon\Database\Builder whereMeta($key, $compare, $value = null)
+ * @method \Platon\Database\Builder orWhereMeta($key, $compare, $value = null)
+ * @method \Platon\Database\Builder whereTaxonomyIn($taxonomy, $terms, $field = 'term_id')
+ * @method \Platon\Database\Builder orderBy($orderBy, $direction = 'asc')
+ * @method \Platon\Database\Builder limit($limit)
+ * @method \Platon\Database\Builder latest($orderBy = 'date')
+ * @method \Platon\Database\Builder oldest($orderBy = 'date')
  */
-class QueryBuilder
+class Builder
 {
     use Macroable;
 
@@ -42,7 +42,7 @@ class QueryBuilder
     protected $model;
 
     /**
-     * QueryBuilder constructor.
+     * Builder constructor.
      *
      * @param \Platon\Database\Model|null $model
      */
@@ -294,7 +294,7 @@ class QueryBuilder
      * @param string $method
      * @param mixed $args
      *
-     * @return QueryBuilder
+     * @return Builder
      */
     protected function resolveMethodCall($method, $args)
     {
@@ -319,7 +319,7 @@ class QueryBuilder
      * @param string $method
      * @param mixed $args
      *
-     * @return QueryBuilder
+     * @return Builder
      */
     public function __call($method, $args)
     {
@@ -330,7 +330,7 @@ class QueryBuilder
      * @param string $method
      * @param mixed $args
      *
-     * @return QueryBuilder
+     * @return Builder
      */
     public static function __callStatic($method, $args)
     {
