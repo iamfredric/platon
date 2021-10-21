@@ -7,6 +7,7 @@ use Platon\Exceptions\BuilderCallNotFoundException;
 /**
  * @method \Platon\Database\QueryBuilder where($key, $value)
  * @method \Platon\Database\QueryBuilder whereMeta($key, $compare, $value = null)
+ * @method \Platon\Database\QueryBuilder orWhereMeta($key, $compare, $value = null)
  * @method \Platon\Database\QueryBuilder whereTaxonomyIn($taxonomy, $terms, $field = 'term_id')
  * @method \Platon\Database\QueryBuilder orderBy($orderBy, $direction = 'asc')
  * @method \Platon\Database\QueryBuilder limit($limit)
@@ -16,6 +17,8 @@ use Platon\Exceptions\BuilderCallNotFoundException;
 class QueryBuilder
 {
     use Macroable;
+
+    protected ?MetaBuilder $metaBuilder = null;
 
     /**
      * Query arguments
@@ -162,8 +165,8 @@ class QueryBuilder
     {
         $args = $this->arguments;
 
-        if (count($this->metaArguments)) {
-            $args['meta_query'] = $this->metaArguments;
+        if ($this->metaBuilder) {
+            $args['meta_query'] = $this->metaBuilder->toArray();
         }
 
         return $args;
@@ -191,25 +194,38 @@ class QueryBuilder
         $this->arguments['tax_query'][] = $query;
     }
 
-    public function setMetaArgument($key, $compare, $value = null)
+    public function setMetaArgument($key, $compare = null, $value = null)
     {
-        $this->metaArguments[] = [
-            'key' => $key,
-            'value' => $value === null ? $compare : $value,
-            'compare' => $value === null ? '=' : $compare
-        ];
+        if (! $this->metaBuilder) {
+            $this->metaBuilder = new MetaBuilder();
+        }
+
+        $this->metaBuilder->setArgument($key, $compare, $value);
     }
 
     /**
-     * @param $key
-     * @param $compare
+     * @param string|callable $key
+     * @param string|null $compare
      * @param string|null $value
      *
      * @return void
      */
-    protected function scopeWhereMeta($key, $compare, $value = null)
+    protected function scopeWhereMeta($key, $compare = null, $value = null)
     {
-        $this->setMetaArgument($key, $compare, $value);
+        if (! $this->metaBuilder) {
+            $this->metaBuilder = new MetaBuilder();
+        }
+
+        $this->metaBuilder->where($key, $compare, $value);
+    }
+
+    protected function scopeOrWhereMeta($key, $compare, $value = null)
+    {
+        if (! $this->metaBuilder) {
+            $this->metaBuilder = new MetaBuilder();
+        }
+
+        $this->metaBuilder->orWhere($key, $compare, $value);
     }
 
     /**
@@ -288,6 +304,10 @@ class QueryBuilder
             return $this;
         } elseif (method_exists($this, $name = 'scope'. ucfirst($method))) {
             $this->{$name}(...$args);
+
+            return $this;
+        }  elseif ($this->model instanceOf Model && method_exists($this->model, 'scope' . ucfirst($method))) {
+            $this->model->{$name}($this, ...$args);
 
             return $this;
         }

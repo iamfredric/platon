@@ -32,6 +32,13 @@ class Term
         ))->mapInto(static::class);
     }
 
+    public static function find($id)
+    {
+        if ($term = get_term($id)) {
+            return new static($term);
+        }
+    }
+
     public static function forModel(Model $model)
     {
         $instance = new static();

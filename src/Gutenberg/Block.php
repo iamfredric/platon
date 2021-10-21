@@ -18,7 +18,7 @@ abstract class Block
 
     public function render($data)
     {
-        $this->data = get_fields($data['id']) ?? [];
+        $this->data = get_fields($data['id']) ?: [];
 
         echo view(
             str_replace('{name}', $this->view(), config('paths.blocks', 'gutenberg.{$name}')),
