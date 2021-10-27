@@ -53,9 +53,9 @@ class Component implements Arrayable, Jsonable
 
         unset($data['acf_fc_layout']);
 
-        $data = $this->appendDataAttributes($data);
+        $this->data = $this->appendDataAttributes($data);
 
-        $this->data = (new Transformations($data))
+        $this->data = (new Transformations($this->data))
             ->through(Caster::class, $this->casts ?? [])
             ->through(AutoCaster::class)
             ->through(AttributeGetters::class, $this)
