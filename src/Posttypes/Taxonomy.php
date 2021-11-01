@@ -50,9 +50,14 @@ class Taxonomy
     protected $showTagCloud = false;
 
     /**
-     * @var null
+     * @var null|string
      */
     protected $slug = null;
+
+    /**
+     * @var bool
+     */
+    protected $showInRest = false;
 
     /**
      * Taxonomy constructor.
@@ -165,6 +170,16 @@ class Taxonomy
     /**
      * @return $this
      */
+    public function useGutenberg()
+    {
+        $this->showInRest = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
     public function isNotHierarchical()
     {
         $this->hierarchical = false;
@@ -254,6 +269,7 @@ class Taxonomy
             'hierarchical'  => $this->hierarchical,
             'show_ui'       => $this->showUi,
             'show_tagcloud' => $this->showTagCloud,
+            'show_in_rest' => $this->showInRest,
             'rewrite' => [
                 'slug' => $this->slug ?: $this->id
             ]
