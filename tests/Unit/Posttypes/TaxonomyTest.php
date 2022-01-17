@@ -39,6 +39,7 @@ class TaxonomyTest extends TestCase
                 'hierarchical' => true,
                 'show_ui' => true,
                 'show_tagcloud' => false,
+                'show_in_rest' => false,
                 'rewrite' => [
                     'slug' => 'test-tax'
                 ]

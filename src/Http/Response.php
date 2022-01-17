@@ -183,6 +183,17 @@ class Response
         ));
     }
 
+    public function toJsonResponse()
+    {
+        $this->setStatusHeader();
+
+        foreach ($this->headers as $key => $value) {
+            header($key, $value);
+        }
+
+        return json_decode($this->content, true);
+    }
+
     /**
      * @return string
      */

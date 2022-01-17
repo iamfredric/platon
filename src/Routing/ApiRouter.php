@@ -95,8 +95,14 @@ class ApiRouter
             }
         }
 
-        return $method->invokeArgs(
+        $response = $method->invokeArgs(
             $class, $dependencies
         );
+
+        if ($response instanceof Response) {
+            return $response->toJsonResponse();
+        }
+
+        return $response;
     }
 }
