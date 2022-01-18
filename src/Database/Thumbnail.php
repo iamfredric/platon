@@ -5,6 +5,9 @@ namespace Platon\Database;
 use Platon\Wordpress\Image;
 use Platon\Wordpress\WpImage;
 
+/**
+ * @property Image|WpImage $thumbnail
+ */
 trait Thumbnail
 {
     /**

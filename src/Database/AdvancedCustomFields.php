@@ -2,6 +2,9 @@
 
 namespace Platon\Database;
 
+/**
+ * @property \Illuminate\Support\Collection $fields
+ */
 trait AdvancedCustomFields
 {
     /**

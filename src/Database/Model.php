@@ -11,6 +11,30 @@ use Illuminate\Support\Str;
 use ReflectionClass;
 
 /**
+ * @property int $id
+ * @property int $order
+ * @property int $author
+ * @property Carbon $date
+ * @property $date_gmt
+ * @property string $content
+ * @property string $title
+ * @property string $excerpt
+ * @property string $status
+ * @property string $password
+ * @property string $name
+ * @property Carbon $modified
+ * @property $modified_gmt
+ * @property string $content_filtered
+ * @property int|null $parent
+ * @property string $type
+ * @property string $mime_type
+ * @property string $comment_status
+ * @property string $ping_status
+ * @property string $to_ping
+ * @property string $pinged
+ * @property string $guid
+ * @property int $comment_count
+ * @property string $filter
  * @method static \Platon\Database\Builder where($key, $value)
  * @method static \Platon\Database\Builder whereMeta($key, $compare, $value = null)
  * @method static \Platon\Database\Builder whereTaxonomyIn($taxonomy, $terms, $field = 'term_id')

@@ -2,6 +2,9 @@
 
 namespace Platon\Database;
 
+/**
+ * @property \Platon\Components\Components $components
+ */
 trait Components
 {
     /**
