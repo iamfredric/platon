@@ -12,6 +12,7 @@ use ReflectionClass;
 
 /**
  * @property int $id
+ * @property string $url
  * @property int $order
  * @property int $author
  * @property Carbon $date
@@ -66,6 +67,11 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      * @var array
      */
     protected $casts = [];
+
+    /**
+     * @var array
+     */
+    private $hasCasted = [];
 
     /**
      * Keys that should remain hidden
@@ -211,6 +217,10 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      */
     public function get($key)
     {
+        if (in_array($key, $this->hasCasted)) {
+            return $this->attributes->get($key);
+        }
+
         // If attribute is defined as hidden null is returned
         if ($this->attributeShouldBeHidden($key)) {
             return null;
@@ -222,10 +232,19 @@ class Model implements Arrayable, Jsonable, ArrayAccess
 
         $value = $this->attributes->get($key);
 
+        if (! $this->attributes->has($key)) {
+            if (method_exists($this, 'getFieldsAttribute')) {
+                if ($this->getFieldsAttribute()->has($key)) {
+                    $value = $this->getFieldsAttribute()->get($key);
+                }
+            }
+        }
+
         // Filter value through the date casting method,
         // it only casts to dates if defined
-        $value = $this->castToDates($key, $value);
 
+        // Check if has been casted before
+        $value = $this->castToDates($key, $value);
         $value = $this->cast($key, $value);
 
         // If attribute getter is defined, the value gets filtered via this method
@@ -233,7 +252,10 @@ class Model implements Arrayable, Jsonable, ArrayAccess
             $value = $this->$method($value);
         }
 
-        return $value;
+        $this->hasCasted[] = $key;
+        $this->attributes->put($key, $value);
+
+        return $this->attributes->get($key);
     }
 
     /**
@@ -333,7 +355,17 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     protected function cast($key, $value)
     {
         if (isset($this->casts[$key])) {
+            $this->hasCasted[] = $key;
             return new $this->casts[$key]($value);
+        } elseif (isset($this->casts["{$key}.*"])) {
+            return (new Collection($value))
+                ->mapInto($this->casts["{$key}.*"]);
+        }
+
+        foreach (array_keys($this->casts) as $k) {
+            if (preg_match("/$key\[(.*?)\]/", $k, $matches)) {
+                 return new $this->casts[$k]($this->get($matches[1]));
+            }
         }
 
         return $value;
