@@ -4,6 +4,7 @@ namespace Platon;
 
 use Platon\Facades\Facade;
 use Platon\ServiceProviders\AcfAdminServiceProvider;
+use Platon\ServiceProviders\AcfServiceProvider;
 use Platon\ServiceProviders\HookServiceProvider;
 use Platon\ServiceProviders\ImageServiceProvider;
 use Platon\ServiceProviders\LoginServiceProvider;
@@ -60,7 +61,8 @@ class Application
         HookServiceProvider::class,
         SupportServiceProvider::class,
         LoginServiceProvider::class,
-        WpdbServiceProvider::class
+        WpdbServiceProvider::class,
+        AcfServiceProvider::class
     ];
 
     /**
