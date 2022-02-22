@@ -78,7 +78,7 @@ class Component implements Arrayable, Jsonable
             $view = $this->prefix ? "components.{$this->prefix}.{$this->view}" : "components.{$this->view}";
         }
 
-        return view($view, $this->data);
+        return view($view, $this->attributes());
     }
 
     public function data($key = null)
@@ -87,6 +87,11 @@ class Component implements Arrayable, Jsonable
             return $this->data[Str::camel($key)] ?? null;
         }
 
+        return $this->data;
+    }
+
+    public function attributes()
+    {
         return $this->data;
     }
 
