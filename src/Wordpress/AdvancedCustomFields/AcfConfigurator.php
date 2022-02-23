@@ -3,7 +3,7 @@
 namespace Platon\Wordpress\AdvancedCustomFields;
 
 use Illuminate\Support\Collection;
-use PHPUnit\Util\Exception;
+use Exception;
 
 class AcfConfigurator
 {

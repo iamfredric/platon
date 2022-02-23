@@ -70,6 +70,16 @@ class Components implements Arrayable, Countable, IteratorAggregate, Jsonable
                 $this->resolveClassname($component['acf_fc_layout'])
             );
         }
+
+        foreach ($this->components as $key => $component) {
+            if (isset($this->components[$key - 1])) {
+                $component->setPreviousComponent($this->components[$key - 1]->hash());
+            }
+
+            if (isset($this->components[$key + 1])) {
+                $component->setNextComponent($this->components[$key + 1]->hash());
+            }
+        }
     }
 
     /**

@@ -37,6 +37,10 @@ class Component implements Arrayable, Jsonable
      */
     protected $casts = [];
 
+    protected ?string $nextComponent = null;
+
+    protected ?string $prevComponent = null;
+
     /**
      * Component constructor.
      *
@@ -92,7 +96,11 @@ class Component implements Arrayable, Jsonable
 
     public function attributes()
     {
-        return $this->data;
+        return array_merge($this->data, [
+            'nextComponent' => $this->nextComponent,
+            'prevComponent' => $this->prevComponent,
+            'currentComponent' => $this->hash(),
+        ]);
     }
 
     protected function appendDataAttributes(array $data)
@@ -128,6 +136,21 @@ class Component implements Arrayable, Jsonable
                     return [$key => $value instanceof Arrayable ? $value->toArray() : $value];
                 })
         ];
+    }
+
+    public function setPreviousComponent(?string $hash)
+    {
+        $this->prevComponent = $hash;
+    }
+
+    public function setNextComponent(?string $hash)
+    {
+        $this->nextComponent = $hash;
+    }
+
+    public function hash(): string
+    {
+        return $this->view;
     }
 
     public function toJson($options = 0)
