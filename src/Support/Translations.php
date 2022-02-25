@@ -57,8 +57,10 @@ class Translations
     {
         $contents = file_get_contents($file);
 
-        if (preg_match("/trans\('(.*?)'\)/i", $contents, $matches)) {
-            $this->strings->push($matches[1]);
+        if (preg_match_all("/trans\('(.*?)'\)/i", $contents, $matches)) {
+            foreach ($matches[1] as $item) {
+                $this->strings->push($item);
+            }
         }
     }
 
