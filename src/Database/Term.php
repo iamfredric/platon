@@ -44,6 +44,7 @@ class Term
         $instance = new static();
 
         return (new Collection(get_the_terms($model->id, $instance->type())))
+            ->filter()
             ->mapInto(static::class);
     }
 

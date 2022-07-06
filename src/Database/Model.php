@@ -485,13 +485,13 @@ class Model implements Arrayable, Jsonable, ArrayAccess
     }
 
     /**
-     * Determines whether a offset exists
+     * Determines whether an offset exists
      *
      * @param mixed $offset
      *
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return ! is_null($this->get($offset));
     }
@@ -501,9 +501,9 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      *
      * @param mixed $offset
      *
-     * @return mixed|null|Modest
+     * @return mixed|null|Model
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->get($offset);
     }
@@ -516,7 +516,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      *
      * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->attributes[$offset] = $value;
     }
@@ -526,7 +526,7 @@ class Model implements Arrayable, Jsonable, ArrayAccess
      *
      * @param mixed $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->attributes[$offset]);
     }

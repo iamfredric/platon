@@ -2,8 +2,6 @@
 
 namespace Platon\Routing;
 
-use Iamfredric\Instantiator\Instantiator;
-
 class Route
 {
     /**
@@ -194,17 +192,11 @@ class Route
     /**
      * @return mixed
      *
-     * @throws \Iamfredric\Instantiator\Exceptions\InstantiationException
+     * @throws \ReflectionException
      */
     public function resolve()
     {
-        $class = new Instantiator($this->getClassName());
-
-        if ($method =$this->getMethodName()) {
-            return $class->callMethod($this->getMethodName());
-        }
-
-        return $class->call()();
+        return app()->call($this->getClassName(), $this->getMethodName() ?: '__invoke');
     }
 
     /**

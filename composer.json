@@ -10,11 +10,10 @@
     }
   ],
   "require": {
-    "php": "^7.4|^8.0",
-    "iamfredric/instantiator": "1.0.1",
+    "php": "^8.1|^8.0",
     "jenssegers/blade": "^1.4",
     "illuminate/collections": "^8.64",
-    "nesbot/carbon": "^2.53",
+    "nesbot/carbon": "^2.59",
     "larapack/dd": "^1.1",
     "ext-json": "*"
   },

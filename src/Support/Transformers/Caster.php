@@ -50,7 +50,7 @@ class Caster
      */
     protected function transformItem($key, $keys, $cast)
     {
-        $value = $this->values[$key];
+        $value = $this->values[$key] ?? null;
         $multiple = false;
 
         if (count($keys)) {
