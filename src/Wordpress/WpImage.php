@@ -113,6 +113,10 @@ class WpImage implements Arrayable, Jsonable
                 echo $style;
             });
 
+            add_action('admin_footer', function () use($style) {
+                echo $style;
+            });
+
             return "id={$this->identifier()}";
         }
     }
