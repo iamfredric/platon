@@ -72,6 +72,14 @@ class Router
                 return $this->routeResponse($this->templates[$key]);
             }
 
+            if ($taxonomy = get_query_var('taxonomy')) {
+                $typeTemplate = "taxonomy-{$taxonomy}";
+
+                if ($this->routeIsDefined($typeTemplate)) {
+                    return $this->routeResponse($this->routes[$typeTemplate]);
+                }
+            }
+
             if ($type = get_post_type()) {
                 $typeTemplate = "{$template}-{$type}";
 
