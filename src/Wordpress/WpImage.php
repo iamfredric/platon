@@ -109,7 +109,7 @@ class WpImage implements Arrayable, Jsonable
     public function styles($size = null)
     {
         if ($style = $this->style($size)) {
-            add_action('wp_footer', function () use($style) {
+            add_action('wp_head', function () use($style) {
                 echo $style;
             });
 

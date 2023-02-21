@@ -167,6 +167,11 @@ class Image implements Arrayable, Jsonable
      */
     public function render($size = null, $attributes = [])
     {
+        if ($srcset = $this->srcSet($size)) {
+            $attributes['srcset'] = $srcset;
+            $attributes['sizes'] = '100vw';
+        }
+
         $attributes = collect([
             'width' => $this->getWidth($size),
             'height' => $this->getHeight($size),
@@ -174,8 +179,6 @@ class Image implements Arrayable, Jsonable
             'loading' => 'lazy',
             'alt' => $this->alt(),
             'title' => $this->title(),
-            'srcset' => $this->srcSet($size),
-            'sizes' => '100vw',
             'decoding' => 'async'
         ])->merge($attributes)
           ->map(fn ($value, $attribute) => "{$attribute}=\"{$value}\"")
@@ -248,7 +251,7 @@ class Image implements Arrayable, Jsonable
     public function styles($size = null)
     {
         if ($style = $this->style($size)) {
-            add_action('wp_footer', function () use($style) {
+            add_action('wp_head', function () use($style) {
                 echo $style;
             });
 
