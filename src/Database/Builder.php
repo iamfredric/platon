@@ -13,6 +13,7 @@ use Platon\Exceptions\BuilderCallNotFoundException;
  * @method \Platon\Database\Builder limit($limit)
  * @method \Platon\Database\Builder latest($orderBy = 'date')
  * @method \Platon\Database\Builder oldest($orderBy = 'date')
+ * @method \Platon\Database\Builder when($condition, $callback)
  */
 class Builder
 {
@@ -236,6 +237,19 @@ class Builder
     protected function scopeWhereTaxonomyIn($taxonomy, $terms, $field = 'term_id')
     {
         $this->setTaxQuery(compact('taxonomy', 'terms', 'field'));
+    }
+
+    /**
+     * @param mixed $value
+     * @param callable $callback
+     *
+     * @return void
+     */
+    protected function scopeWhen($value, callable $callback)
+    {
+        if (! empty($value)) {
+            $callback($this, $value);
+        }
     }
 
     /**
